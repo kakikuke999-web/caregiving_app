@@ -1,0 +1,55 @@
+<h2><%= @care_recipient.name %> さんの訪問予定・実績</h2>
+<div id="calendar" data-care-recipient-id="<%= @care_recipient.id %>"></div>
+
+<!-- モーダル構造（Bootstrap 5） -->
+<div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="eventModalLabel">予定詳細</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+      </div>
+      <div class="modal-body" id="modal-body">
+        <!-- JavaScriptで内容を埋め込む -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+    const careRecipientId = calendarEl.dataset.careRecipientId;
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      plugins: [FullCalendar.DayGrid.default],
+      initialView: 'dayGridMonth',
+      events: `/care_recipients/${careRecipientId}/visit_events`,
+
+      eventClick: function(info) {
+        const props = info.event.extendedProps;
+
+        fetch(`/visit_reports/${props.id}/edit`, { headers: { 'Accept': 'text/vnd.turbo-stream.html' } })
+          .then(response => response.text())
+          .then(html => {
+            document.getElementById('modal-body').innerHTML = html;
+            const modal = new bootstrap.Modal(document.getElementById('eventModal'));
+            modal.show();
+          });
+      }
+
+    });
+
+    calendar.render();
+  });
+</script>
+
+
+
+
+
+
+
+
+

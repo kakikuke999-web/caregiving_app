@@ -1,0 +1,19 @@
+<h1>ようこそ、<%= current_user.name %> さん</h1>
+
+<h2>対象者を選択してください</h2>
+
+<%= form_with url: show_menu_path, method: :post, local: true do %>
+  <div class="field">
+    <%= label_tag :care_recipient_id, "対象者" %><br>
+    <%= select_tag :care_recipient_id, options_from_collection_for_select(CareRecipient.all, :id, :name), prompt: "選択してください" %>
+  </div>
+
+  <div class="actions">
+    <%= submit_tag "メニューを表示" %>
+  </div>
+<% end %>
+
+<% if Rails.env.development? %>
+  <p><%= link_to "ユーザー編集画面へ（開発用）", users_path, class: "btn btn-warning" %></p>
+<% end %>
+

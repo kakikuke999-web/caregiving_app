@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  care_recipient: one
+  user: one
+  notes: MyText
+  visited_at: 2025-11-04 14:45:07
+
+two:
+  care_recipient: two
+  user: two
+  notes: MyText
+  visited_at: 2025-11-04 14:45:07

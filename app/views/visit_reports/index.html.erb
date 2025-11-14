@@ -1,0 +1,24 @@
+<h2>訪問記録一覧</h2>
+
+<% if @care_recipient %>
+  <p>対象者: <strong><%= @care_recipient.name %></strong></p>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>訪問日時</th>
+      <th>記録者</th>
+      <th>記録内容</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @visit_reports.each do |report| %>
+      <tr>
+        <td><%= report.visited_at.strftime("%Y年%m月%d日 %H:%M") %></td>
+        <td><%= report.user.email %></td>
+        <td><%= simple_format(report.notes) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

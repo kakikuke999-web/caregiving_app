@@ -1,0 +1,17 @@
+<h2><%= @care_recipient.name %> さんのメニュー</h2>
+
+<% if current_user.care_manager? %>
+  <%= link_to "対象者情報を編集", edit_care_recipient_path(@care_recipient), class: "btn btn-secondary" %><br>
+  <%= link_to "訪問記録一覧", visit_reports_path(care_recipient_id: @care_recipient.id), class: "btn btn-secondary" %>
+<% elsif current_user.staff? %>
+  <%= link_to "訪問記録を登録", new_visit_report_path(care_recipient_id: @care_recipient.id), class: "btn btn-primary" %><br>
+  <%= link_to "過去の記録を見る", visit_reports_path(care_recipient_id: @care_recipient.id), class: "btn btn-secondary" %>
+<% elsif current_user.family? %>
+  <%= link_to "対象者の情報を見る", care_recipient_path(@care_recipient), class: "btn btn-secondary" %><br>
+<% end %>
+
+
+<h2>訪問予定・実績カレンダー</h2>
+<p>
+  <%= link_to "カレンダーで見る", calendar_care_recipient_path(@care_recipient), class: "btn btn-primary" %>
+</p>

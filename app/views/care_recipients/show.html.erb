@@ -1,0 +1,42 @@
+<h2><%= @care_recipient.name %> さんの情報</h2>
+
+<ul>
+  <li>生年月日: <%= @care_recipient.dob.strftime("%Y年%m月%d日") %></li>
+  <li>緊急連絡先: <%= @care_recipient.emergency_contact %></li>
+  <li>アレルギー: <%= @care_recipient.allergies.presence || "なし" %></li>
+</ul>
+
+<% if current_user.family? %>
+  <h3>訪問記録一覧（閲覧専用）</h3>
+<% else %>
+  <h3>訪問記録一覧</h3>
+  <%= link_to "新規記録を追加", new_visit_report_path(care_recipient_id: @care_recipient.id), class: "btn btn-primary" unless current_user.family? %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>訪問日時</th>
+      <th>記録者</th>
+      <th>訪問区分</th>
+      <th>記録内容</th>
+      <% unless current_user.family? %><th>操作</th><% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @care_recipient.visit_reports.each do |report| %>
+      <tr>
+        <td><%= report.visited_at.strftime("%Y年%m月%d日 %H:%M") %></td>
+        <td><%= report.user.name.presence || report.user.email %></td>
+        <td><%= report.visit_type.name %></td>
+        <td><%= simple_format(report.notes) %></td>
+        <% unless current_user.family? %>
+          <td>
+            <%= link_to "編集", edit_visit_report_path(report) %> |
+            <%= link_to "削除", report, method: :delete, data: { confirm: "本当に削除しますか？" } %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
