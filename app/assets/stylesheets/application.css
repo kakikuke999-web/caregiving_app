@@ -14,4 +14,127 @@
  *= require_self
  */
 
+.care-recipient-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.care-recipient-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  border-left: 6px solid #4CAF50;
+}
+
+.care-recipient-card h2 {
+  margin-top: 0;
+  font-size: 20px;
+  color: #333;
+}
+
+.care-recipient-card p {
+  margin: 6px 0;
+  color: #555;
+}
+
+.actions {
+  margin-top: 12px;
+}
+
+.btn {
+  padding: 6px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+.btn-show { background: #2196F3; color: white; }
+.btn-edit { background: #FFC107; color: black; }
+.btn-delete { background: #F44336; color: white; }
+.btn-new { background: #4CAF50; color: white; padding: 10px 14px; display: inline-block; margin-top: 20px; }
+
+.care-photo {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;   /* ← これで丸くなる */
+  display: block;
+  margin: 0 auto 10px;  /* 中央寄せ */
+  border: 3px solid #ddd; /* ふちを付けると見栄えUP */
+}
+
+/* モーダル背景 */
+.photo-modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  padding-top: 60px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.8);
+}
+
+/* 拡大画像 */
+.photo-modal-content {
+  margin: auto;
+  display: block;
+  max-width: 90%;
+  max-height: 80%;
+  border-radius: 10px;
+}
+
+/* 閉じるボタン */
+.photo-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.photo-upload-area {
+  border: 2px dashed #aaa;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.photo-upload-area.dragover {
+  border-color: #4CAF50;
+  background: #f0fff0;
+}
+
+#photo-preview img {
+  margin-top: 10px;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.page-container {
+  margin-left: 40px;   /* 左に余白 */
+  max-width: 600px;    /* 横幅を制限して見やすく */
+}
+
+.address-field {
+  width: 100%;
+  max-width: 500px;
+}
+
+.memo-field {
+  width: 100%;
+  max-width: 500px;
+}
 

@@ -1,2 +1,34 @@
-<h1>CareRecipients#index</h1>
-<p>Find me in app/views/care_recipients/index.html.erb</p>
+<h1>対象者一覧</h1>
+
+<div class="care-recipient-cards">
+  <% @care_recipients.each do |care_recipient| %>
+    <div class="care-recipient-card">
+      <% if care_recipient.photo.attached? %>
+        <%= image_tag care_recipient.photo.variant(resize_to_fill: [200, 200]),
+              class: "care-photo zoomable-photo",
+              data: { full: url_for(care_recipient.photo) } %>
+      <% else %>
+        <%= image_tag "no_image.png", class: "care-photo" %>
+      <% end %>
+    
+      <h2><%= care_recipient.name %></h2>
+
+      <p><strong>生年月日:</strong> <%= care_recipient.birthday %></p>
+      <p><strong>年齢:</strong> <%= care_recipient.age %> 歳</p>
+      <p><strong>住所:</strong> <%= care_recipient.address %></p>
+      <p><strong>介護度:</strong> <%= care_recipient.care_level %></p>
+
+      <% if care_recipient.memo.present? %>
+        <p><strong>メモ:</strong> <%= simple_format(care_recipient.memo) %></p>
+      <% end %>
+
+      <div class="actions">
+        <%= link_to "表示", care_recipient, class: "btn btn-show" %>
+        <%= link_to "編集", edit_care_recipient_path(care_recipient), class: "btn btn-edit" %>
+        <%= link_to "削除", care_recipient, method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-delete" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<%= link_to "新規登録", new_care_recipient_path, class: "btn btn-new" %>

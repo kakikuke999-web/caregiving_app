@@ -1,2 +1,11 @@
-<h1>CareRecipients#new</h1>
-<p>Find me in app/views/care_recipients/new.html.erb</p>
+<div class="page-container">
+  <h1>対象者の新規登録</h1>
+
+  <%= render "form", care_recipient: @care_recipient %>
+
+  <br>
+
+  <div>
+    <%= link_to "対象者一覧に戻る", care_recipients_path %>
+  </div>
+</div>

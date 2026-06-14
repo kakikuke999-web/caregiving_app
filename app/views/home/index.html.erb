@@ -13,7 +13,11 @@
   </div>
 <% end %>
 
+<!-- ★ ここに追加 -->
+<p>
+  <%= link_to "対象者を登録", new_care_recipient_path, class: "btn btn-primary" %>
+</p>
+
 <% if Rails.env.development? %>
   <p><%= link_to "ユーザー編集画面へ（開発用）", users_path, class: "btn btn-warning" %></p>
 <% end %>
-

@@ -8,6 +8,9 @@
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
 
+    <!-- ★ Rails の JS を読み込む（必須） -->
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -18,7 +21,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.19/index.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.19/index.global.min.js"></script>
 
-    <!-- Bootstrap JS（bundle版でModal含む） -->
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   </head>
 
@@ -28,5 +31,10 @@
     <p class="alert"><%= alert %></p>
 
     <%= yield %>
+
+    <div id="photo-modal" class="photo-modal">
+      <span id="photo-modal-close" class="photo-modal-close">&times;</span>
+      <img id="photo-modal-img" class="photo-modal-content">
+    </div>
   </body>
 </html>

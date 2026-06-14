@@ -1,0 +1,82 @@
+<%= form_with(model: care_recipient) do |form| %>
+  <% if care_recipient.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(care_recipient.errors.count, "error") %> prohibited this care_recipient from being saved:</h2>
+
+      <ul>
+        <% care_recipient.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- 氏名 -->
+  <div>
+    <%= form.label :name, "氏名", style: "display: block" %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+
+  <!-- 生年月日 -->
+  <div>
+    <%= form.label :birthday, "生年月日", style: "display: block" %>
+    <%= form.date_select :birthday,
+          start_year: 1920,
+          end_year: Date.today.year,
+          default: Date.new(1960, 1, 1),
+          use_month_numbers: true,
+          class: "form-control" %>
+  </div>
+
+  <!-- 住所（大きく） -->
+  <div>
+    <%= form.label :address, "住所", style: "display: block" %>
+    <%= form.text_field :address, class: "form-control address-field" %>
+  </div>
+
+  <!-- 介護度 -->
+  <div>
+    <%= form.label :care_level, "介護度", style: "display: block" %>
+    <%= form.select :care_level, [
+        "自立",
+        "要支援1", "要支援2",
+        "要介護1", "要介護2", "要介護3", "要介護4", "要介護5"
+      ], prompt: "選択してください", class: "form-control" %>
+  </div>
+
+  <!-- メモ（大きく） -->
+  <div>
+    <%= form.label :memo, "メモ", style: "display: block" %>
+    <%= form.text_area :memo, rows: 8, class: "form-control memo-field" %>
+  </div>
+
+
+  <!-- 写真アップロード（ドラッグ＆ドロップ対応） -->
+  <div class="photo-upload-area" id="photo-drop-area">
+    <p>ここに写真をドラッグ＆ドロップ</p>
+
+    <%= form.file_field :photo, id: "photo-input", style: "display:none;" %>
+
+    <button type="button" id="photo-select-btn">ファイルを選択</button>
+
+    <div id="photo-preview">
+      <% if care_recipient.photo.attached? %>
+        <%= image_tag care_recipient.photo.variant(resize_to_fill: [150, 150]), class: "care-photo" %>
+      <% end %>
+    </div>
+  </div>
+
+  <% if care_recipient.photo.attached? %>
+    <div style="margin-top: 10px;">
+      <label>
+        <%= form.check_box :remove_photo %>
+        写真を削除する
+      </label>
+    </div>
+  <% end %>
+
+  <!-- 送信ボタン -->
+  <div>
+    <%= form.submit "登録する" %>
+  </div>
+<% end %>
