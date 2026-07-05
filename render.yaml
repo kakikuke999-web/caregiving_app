@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: caregiving-app
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: WEB_CONCURRENCY
+        value: "1"
+      - key: SECRET_KEY_BASE
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: caregiving-app-db
+          property: connectionString
+
+databases:
+  - name: caregiving-app-db
+    plan: free
+    databaseName: caregiving_app_production
+    user: caregiving_app
