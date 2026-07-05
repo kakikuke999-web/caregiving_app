@@ -1,4 +1,5 @@
 <p style="color: green"><%= notice %></p>
+<p style="color: red"><%= alert %></p>
 
 <%= render @care_recipient %>
 
@@ -8,3 +9,33 @@
 
   <%= button_to "Destroy this care recipient", @care_recipient, method: :delete %>
 </div>
+
+<% if policy(@care_recipient).update? %>
+  <div class="family-memberships">
+    <h3>家族アカウントの紐付け</h3>
+
+    <% if @care_recipient.family_memberships.any? %>
+      <ul>
+        <% @care_recipient.family_memberships.includes(:user).each do |membership| %>
+          <li>
+            <%= membership.user.name %>(<%= membership.user.email %>)
+            <%= button_to "解除", care_recipient_family_membership_path(@care_recipient, membership),
+                  method: :delete, data: { confirm: "この家族の紐付けを解除しますか？" }, class: "btn btn-delete" %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p>紐付けられた家族アカウントはありません</p>
+    <% end %>
+
+    <% available_family_users = User.family.where.not(id: @care_recipient.family_members.select(:id)) %>
+    <% if available_family_users.any? %>
+      <%= form_with url: care_recipient_family_memberships_path(@care_recipient), method: :post, scope: :family_membership do |f| %>
+        <%= f.select :user_id, available_family_users.map { |u| ["#{u.name} (#{u.email})", u.id] } %>
+        <%= f.submit "家族として追加" %>
+      <% end %>
+    <% else %>
+      <p>紐付け可能な家族アカウント(familyロール)がありません</p>
+    <% end %>
+  </div>
+<% end %>
