@@ -1,23 +1,28 @@
 require "test_helper"
 
 class VisitReportsControllerTest < ActionDispatch::IntegrationTest
+  setup do
+    @visit_report = visit_reports(:one)
+    sign_in users(:one)
+  end
+
   test "should get index" do
-    get visit_reports_index_url
+    get visit_reports_url
     assert_response :success
   end
 
   test "should get show" do
-    get visit_reports_show_url
+    get visit_report_url(@visit_report)
     assert_response :success
   end
 
   test "should get new" do
-    get visit_reports_new_url
+    get new_visit_report_url, params: { care_recipient_id: @visit_report.care_recipient_id }
     assert_response :success
   end
 
   test "should get edit" do
-    get visit_reports_edit_url
+    get edit_visit_report_url(@visit_report)
     assert_response :success
   end
 end

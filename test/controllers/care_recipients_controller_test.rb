@@ -3,6 +3,7 @@ require "test_helper"
 class CareRecipientsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @care_recipient = care_recipients(:one)
+    sign_in users(:one)
   end
 
   test "should get index" do
