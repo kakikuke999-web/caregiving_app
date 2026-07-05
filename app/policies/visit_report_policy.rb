@@ -1,11 +1,12 @@
-class CareRecipientPolicy < ApplicationPolicy
+class VisitReportPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve
       case user.role
       when "admin", "care_manager", "staff"
         scope.all
       when "family"
-        scope.joins(:family_memberships).where(family_memberships: { user_id: user.id })
+        scope.joins(care_recipient: :family_memberships)
+             .where(family_memberships: { user_id: user.id })
       else
         scope.none
       end
@@ -19,15 +20,15 @@ class CareRecipientPolicy < ApplicationPolicy
   def show?
     return true if user.admin? || user.care_manager? || user.staff?
 
-    record.family_memberships.exists?(user_id: user.id)
+    record.care_recipient.family_memberships.exists?(user_id: user.id)
   end
 
   def create?
-    user.admin? || user.care_manager?
+    user.admin? || user.care_manager? || user.staff?
   end
 
   def update?
-    user.admin? || user.care_manager?
+    create?
   end
 
   def destroy?

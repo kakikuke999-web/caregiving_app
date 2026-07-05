@@ -1,35 +1,28 @@
 class VisitReportsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :authorize_edit, only: [:new, :create, :edit, :update]
-
-
-
-  def authorize_edit
-    redirect_to root_path, alert: "権限がありません" if current_user.family?
-  end
-
   def index
+    @visit_reports = policy_scope(VisitReport)
     if params[:care_recipient_id].present?
       @care_recipient = CareRecipient.find(params[:care_recipient_id])
-      @visit_reports = VisitReport.where(care_recipient_id: @care_recipient.id)
-    else
-      @visit_reports = VisitReport.all
+      authorize @care_recipient, :show?
+      @visit_reports = @visit_reports.where(care_recipient_id: @care_recipient.id)
     end
   end
 
 
   def show
     @visit_report = VisitReport.find(params[:id])
+    authorize @visit_report
   end
 
   def new
     @visit_report = VisitReport.new(care_recipient_id: params[:care_recipient_id])
-
+    authorize @visit_report
   end
 
   def create
     @visit_report = VisitReport.new(visit_report_params)
     @visit_report.user = current_user
+    authorize @visit_report
     if @visit_report.save
       redirect_to @visit_report, notice: "訪問記録を登録しました"
     else
@@ -38,7 +31,10 @@ class VisitReportsController < ApplicationController
   end
 
   def calendar_events
-    reports = VisitReport.includes(:user, :visit_type).where(care_recipient_id: params[:id])
+    care_recipient = CareRecipient.find(params[:id])
+    authorize care_recipient, :show?
+
+    reports = policy_scope(VisitReport).includes(:user, :visit_type).where(care_recipient_id: care_recipient.id)
 
     events = reports.map do |report|
       {
@@ -60,10 +56,12 @@ class VisitReportsController < ApplicationController
 
   def edit
     @report = VisitReport.find(params[:id])
+    authorize @report
   end
 
   def update
     @report = VisitReport.find(params[:id])
+    authorize @report
     if @report.update(report_params)
       respond_to do |format|
         format.turbo_stream do
