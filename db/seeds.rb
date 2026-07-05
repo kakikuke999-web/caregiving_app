@@ -7,3 +7,15 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# Bootstrap an initial admin so a fresh environment (e.g. Render) isn't
+# stuck with no one able to pass authorization checks. Self-registered
+# users default to role: nil, which every Pundit policy denies.
+# Set ADMIN_EMAIL to promote that user to admin on the next deploy/boot.
+if (admin_email = ENV["ADMIN_EMAIL"]).present?
+  user = User.find_by(email: admin_email)
+  if user && !user.admin?
+    user.update!(role: :admin)
+    puts "Promoted #{admin_email} to admin"
+  end
+end
