@@ -29,6 +29,18 @@
   }
 }
 
+.user-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+  font-size: 14px;
+}
+
 /* 幅の狭い画面でテーブルがはみ出さないよう横スクロールにする */
 .table-responsive {
   width: 100%;

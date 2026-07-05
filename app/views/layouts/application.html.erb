@@ -28,6 +28,13 @@
 
   <body>
     <main class="app-container">
+      <% if user_signed_in? %>
+        <div class="user-bar">
+          <span><%= current_user.email %>(<%= current_user.role&.humanize || "未設定" %>)</span>
+          <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "btn btn-edit" %>
+        </div>
+      <% end %>
+
       <p class="notice"><%= notice %></p>
       <p class="alert"><%= alert %></p>
 
