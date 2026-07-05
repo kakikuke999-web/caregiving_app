@@ -1,9 +1,11 @@
 #!/bin/bash -e
 
-# If running the rails server then create or migrate existing database
-if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
-  ./bin/rails db:prepare
-  ./bin/rails db:seed
-fi
+# Create/migrate the database and apply seeds. Both are idempotent, and
+# this app has no separate worker/job command, so it's safe to always
+# run them rather than pattern-match on how the CMD args were passed
+# (some platforms wrap the Dockerfile CMD in a shell, which changes
+# $1/$2 and silently skipped this step).
+./bin/rails db:prepare
+./bin/rails db:seed
 
 exec "${@}"
