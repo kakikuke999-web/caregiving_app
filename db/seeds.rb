@@ -13,9 +13,11 @@
 # users default to role: nil, which every Pundit policy denies.
 # Set ADMIN_EMAIL to promote that user to admin on the next deploy/boot.
 if (admin_email = ENV["ADMIN_EMAIL"]).present?
-  user = User.find_by(email: admin_email)
+  user = User.find_by("LOWER(email) = ?", admin_email.strip.downcase)
   if user && !user.admin?
     user.update!(role: :admin)
-    puts "Promoted #{admin_email} to admin"
+    puts "Promoted #{user.email} to admin"
+  elsif user.nil?
+    puts "ADMIN_EMAIL set to #{admin_email.inspect} but no matching user was found"
   end
 end
