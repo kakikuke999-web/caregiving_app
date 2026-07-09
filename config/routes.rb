@@ -16,6 +16,9 @@ Rails.application.routes.draw do
     end
 
     resources :family_memberships, only: [:create, :destroy]
+    resources :vitals
+    resources :adl_records
+    resources :medication_records
   end
 
   resources :visit_reports

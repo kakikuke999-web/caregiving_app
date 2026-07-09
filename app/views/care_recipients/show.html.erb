@@ -10,6 +10,15 @@
   <%= button_to "Destroy this care recipient", @care_recipient, method: :delete %>
 </div>
 
+<div class="health-trends">
+  <h3>健康推移</h3>
+  <ul>
+    <li><%= link_to "バイタル(血圧・脈拍・体温・体重・血糖値)", care_recipient_vitals_path(@care_recipient) %></li>
+    <li><%= link_to "ADL記録(食事・排泄・睡眠)", care_recipient_adl_records_path(@care_recipient) %></li>
+    <li><%= link_to "服薬記録", care_recipient_medication_records_path(@care_recipient) %></li>
+  </ul>
+</div>
+
 <% if policy(@care_recipient).update? %>
   <div class="family-memberships">
     <h3>家族アカウントの紐付け</h3>

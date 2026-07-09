@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  care_recipient: one
+  recorded_by: staff_one
+  recorded_at: 2026-07-01 08:00:00
+  medication_name: 降圧剤
+  taken: true
+  note: MyText
+
+two:
+  care_recipient: two
+  recorded_by: staff_one
+  recorded_at: 2026-07-01 08:00:00
+  medication_name: 血糖降下薬
+  taken: false
+  note: 本人拒否のため未服薬

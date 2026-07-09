@@ -1,0 +1,87 @@
+<h2><%= @care_recipient.name %>さんのバイタル推移</h2>
+
+<p><%= link_to "対象者ページに戻る", @care_recipient %></p>
+
+<% if policy(Vital.new(care_recipient: @care_recipient)).create? %>
+  <%= link_to "新規記録", new_care_recipient_vital_path(@care_recipient), class: "btn btn-primary mb-3" %>
+<% end %>
+
+<div id="vital-charts" data-vitals="<%= @vitals.map { |v| { type: v.type, value: v.value, systolic: v.systolic, diastolic: v.diastolic, recorded_at: v.recorded_at } }.to_json %>">
+  <% Vital::TYPES.each do |type| %>
+    <canvas id="chart-<%= type %>" class="mb-4"></canvas>
+  <% end %>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>記録日時</th>
+      <th>項目</th>
+      <th>値</th>
+      <th>記録者</th>
+      <th>メモ</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @vitals.each do |vital| %>
+      <tr>
+        <td><%= vital.recorded_at&.strftime("%Y-%m-%d %H:%M") %></td>
+        <td><%= vital.label %></td>
+        <td>
+          <% if vital.type == "blood_pressure" %>
+            <%= vital.systolic %>/<%= vital.diastolic %> mmHg
+          <% else %>
+            <%= vital.value %> <%= vital.unit %>
+          <% end %>
+        </td>
+        <td><%= vital.recorded_by.name %></td>
+        <td><%= vital.note %></td>
+        <td>
+          <% if policy(vital).update? %>
+            <%= link_to "編集", edit_care_recipient_vital_path(@care_recipient, vital) %>
+          <% end %>
+          <% if policy(vital).destroy? %>
+            <%= button_to "削除", care_recipient_vital_path(@care_recipient, vital), method: :delete, data: { confirm: "削除しますか？" }, class: "btn btn-delete" %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const container = document.getElementById('vital-charts');
+    const vitals = JSON.parse(container.dataset.vitals);
+    const labels = { blood_pressure: "血圧", pulse: "脈拍", temperature: "体温", weight: "体重", blood_glucose: "血糖値" };
+
+    Object.keys(labels).forEach(function (type) {
+      const canvas = document.getElementById('chart-' + type);
+      const records = vitals
+        .filter(function (v) { return v.type === type; })
+        .sort(function (a, b) { return new Date(a.recorded_at) - new Date(b.recorded_at); });
+
+      if (records.length === 0) {
+        canvas.style.display = 'none';
+        return;
+      }
+
+      const datasets = type === 'blood_pressure'
+        ? [
+            { label: '収縮期', data: records.map(function (r) { return r.systolic; }), borderColor: '#dc3545' },
+            { label: '拡張期', data: records.map(function (r) { return r.diastolic; }), borderColor: '#0d6efd' }
+          ]
+        : [{ label: labels[type], data: records.map(function (r) { return r.value; }), borderColor: '#198754' }];
+
+      new Chart(canvas, {
+        type: 'line',
+        data: {
+          labels: records.map(function (r) { return new Date(r.recorded_at).toLocaleDateString(); }),
+          datasets: datasets
+        },
+        options: { responsive: true, plugins: { title: { display: true, text: labels[type] } } }
+      });
+    });
+  });
+</script>

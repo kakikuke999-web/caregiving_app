@@ -34,6 +34,18 @@
     <%= form.text_field :address, class: "form-control address-field" %>
   </div>
 
+  <!-- 緊急連絡先 -->
+  <div>
+    <%= form.label :emergency_contact, "緊急連絡先", style: "display: block" %>
+    <%= form.text_field :emergency_contact, class: "form-control" %>
+  </div>
+
+  <!-- アレルギー -->
+  <div>
+    <%= form.label :allergies, "アレルギー", style: "display: block" %>
+    <%= form.text_area :allergies, rows: 3, class: "form-control" %>
+  </div>
+
   <!-- 介護度 -->
   <div>
     <%= form.label :care_level, "介護度", style: "display: block" %>

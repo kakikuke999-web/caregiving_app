@@ -1,0 +1,39 @@
+<%= form_with model: [care_recipient, adl_record], local: true do |f| %>
+  <% if adl_record.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= pluralize(adl_record.errors.count, "error") %> prohibited this adl_record from being saved:</h2>
+      <ul>
+        <% adl_record.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :recorded_at, "記録日時" %>
+    <%= f.datetime_select :recorded_at, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :meal_intake, "食事量" %>
+    <%= f.select :meal_intake, AdlRecord.meal_intakes.keys.map { |k| [AdlRecord::MEAL_INTAKE_LABELS[k], k] }, { prompt: "選択してください" }, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :excretion_status, "排泄" %>
+    <%= f.select :excretion_status, AdlRecord.excretion_statuses.keys.map { |k| [AdlRecord::EXCRETION_STATUS_LABELS[k], k] }, { prompt: "選択してください" }, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sleep_quality, "睡眠" %>
+    <%= f.select :sleep_quality, AdlRecord.sleep_qualities.keys.map { |k| [AdlRecord::SLEEP_QUALITY_LABELS[k], k] }, { prompt: "選択してください" }, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :note, "メモ" %>
+    <%= f.text_area :note, class: "form-control" %>
+  </div>
+
+  <%= f.submit "保存", class: "btn btn-primary" %>
+<% end %>

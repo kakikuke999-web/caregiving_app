@@ -81,6 +81,6 @@ class CareRecipientsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def care_recipient_params
-      params.require(:care_recipient).permit(:name, :birthday, :address, :care_level, :memo, :photo)
+      params.require(:care_recipient).permit(:name, :birthday, :address, :care_level, :memo, :photo, :emergency_contact, :allergies)
     end
 end

@@ -1,0 +1,5 @@
+<h2><%= @care_recipient.name %>さんの服薬記録 - 編集</h2>
+
+<%= render "form", care_recipient: @care_recipient, medication_record: @medication_record %>
+
+<%= link_to "一覧に戻る", care_recipient_medication_records_path(@care_recipient) %>

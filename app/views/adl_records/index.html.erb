@@ -1,0 +1,41 @@
+<h2><%= @care_recipient.name %>さんのADL記録</h2>
+
+<p><%= link_to "対象者ページに戻る", @care_recipient %></p>
+
+<% if policy(AdlRecord.new(care_recipient: @care_recipient)).create? %>
+  <%= link_to "新規記録", new_care_recipient_adl_record_path(@care_recipient), class: "btn btn-primary mb-3" %>
+<% end %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>記録日時</th>
+      <th>食事量</th>
+      <th>排泄</th>
+      <th>睡眠</th>
+      <th>記録者</th>
+      <th>メモ</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @adl_records.each do |adl_record| %>
+      <tr>
+        <td><%= adl_record.recorded_at&.strftime("%Y-%m-%d %H:%M") %></td>
+        <td><%= AdlRecord::MEAL_INTAKE_LABELS[adl_record.meal_intake] %></td>
+        <td><%= AdlRecord::EXCRETION_STATUS_LABELS[adl_record.excretion_status] %></td>
+        <td><%= AdlRecord::SLEEP_QUALITY_LABELS[adl_record.sleep_quality] %></td>
+        <td><%= adl_record.recorded_by.name %></td>
+        <td><%= adl_record.note %></td>
+        <td>
+          <% if policy(adl_record).update? %>
+            <%= link_to "編集", edit_care_recipient_adl_record_path(@care_recipient, adl_record) %>
+          <% end %>
+          <% if policy(adl_record).destroy? %>
+            <%= button_to "削除", care_recipient_adl_record_path(@care_recipient, adl_record), method: :delete, data: { confirm: "削除しますか？" }, class: "btn btn-delete" %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

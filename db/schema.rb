@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_07_04_194128) do
+ActiveRecord::Schema[7.1].define(version: 2026_07_09_102704) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,20 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_04_194128) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "adl_records", force: :cascade do |t|
+    t.bigint "care_recipient_id", null: false
+    t.bigint "recorded_by_id", null: false
+    t.datetime "recorded_at"
+    t.integer "meal_intake"
+    t.integer "excretion_status"
+    t.integer "sleep_quality"
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["care_recipient_id"], name: "index_adl_records_on_care_recipient_id"
+    t.index ["recorded_by_id"], name: "index_adl_records_on_recorded_by_id"
   end
 
   create_table "care_recipient_visit_types", force: :cascade do |t|
@@ -72,6 +86,19 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_04_194128) do
     t.index ["care_recipient_id"], name: "index_family_memberships_on_care_recipient_id"
     t.index ["user_id", "care_recipient_id"], name: "index_family_memberships_on_user_id_and_care_recipient_id", unique: true
     t.index ["user_id"], name: "index_family_memberships_on_user_id"
+  end
+
+  create_table "medication_records", force: :cascade do |t|
+    t.bigint "care_recipient_id", null: false
+    t.bigint "recorded_by_id", null: false
+    t.datetime "recorded_at"
+    t.string "medication_name"
+    t.boolean "taken", default: true, null: false
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["care_recipient_id"], name: "index_medication_records_on_care_recipient_id"
+    t.index ["recorded_by_id"], name: "index_medication_records_on_recorded_by_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -113,19 +140,26 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_04_194128) do
     t.bigint "recorded_by_id", null: false
     t.datetime "recorded_at"
     t.string "type"
-    t.string "value"
+    t.decimal "value", precision: 6, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "systolic"
+    t.integer "diastolic"
+    t.text "note"
     t.index ["care_recipient_id"], name: "index_vitals_on_care_recipient_id"
     t.index ["recorded_by_id"], name: "index_vitals_on_recorded_by_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "adl_records", "care_recipients"
+  add_foreign_key "adl_records", "users", column: "recorded_by_id"
   add_foreign_key "care_recipient_visit_types", "care_recipients"
   add_foreign_key "care_recipient_visit_types", "visit_types"
   add_foreign_key "family_memberships", "care_recipients"
   add_foreign_key "family_memberships", "users"
+  add_foreign_key "medication_records", "care_recipients"
+  add_foreign_key "medication_records", "users", column: "recorded_by_id"
   add_foreign_key "visit_reports", "care_recipients"
   add_foreign_key "visit_reports", "users"
   add_foreign_key "visit_reports", "visit_types"

@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  care_recipient: one
+  recorded_by: staff_one
+  recorded_at: 2026-07-01 12:00:00
+  meal_intake: full
+  excretion_status: normal
+  sleep_quality: good
+  note: 昼食は完食
+
+two:
+  care_recipient: two
+  recorded_by: staff_one
+  recorded_at: 2026-07-01 12:00:00
+  meal_intake: half
+  excretion_status: loose
+  sleep_quality: fair
+  note: 少し食欲なし

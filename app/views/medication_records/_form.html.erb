@@ -1,0 +1,34 @@
+<%= form_with model: [care_recipient, medication_record], local: true do |f| %>
+  <% if medication_record.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= pluralize(medication_record.errors.count, "error") %> prohibited this medication_record from being saved:</h2>
+      <ul>
+        <% medication_record.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :recorded_at, "記録日時" %>
+    <%= f.datetime_select :recorded_at, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :medication_name, "薬剤名・内容" %>
+    <%= f.text_field :medication_name, class: "form-control" %>
+  </div>
+
+  <div class="mb-3 form-check">
+    <%= f.check_box :taken, class: "form-check-input" %>
+    <%= f.label :taken, "服薬した", class: "form-check-label" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :note, "メモ" %>
+    <%= f.text_area :note, class: "form-control" %>
+  </div>
+
+  <%= f.submit "保存", class: "btn btn-primary" %>
+<% end %>

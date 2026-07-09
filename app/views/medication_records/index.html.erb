@@ -1,0 +1,39 @@
+<h2><%= @care_recipient.name %>さんの服薬記録</h2>
+
+<p><%= link_to "対象者ページに戻る", @care_recipient %></p>
+
+<% if policy(MedicationRecord.new(care_recipient: @care_recipient)).create? %>
+  <%= link_to "新規記録", new_care_recipient_medication_record_path(@care_recipient), class: "btn btn-primary mb-3" %>
+<% end %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>記録日時</th>
+      <th>薬剤名・内容</th>
+      <th>服薬</th>
+      <th>記録者</th>
+      <th>メモ</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @medication_records.each do |medication_record| %>
+      <tr>
+        <td><%= medication_record.recorded_at&.strftime("%Y-%m-%d %H:%M") %></td>
+        <td><%= medication_record.medication_name %></td>
+        <td><%= medication_record.taken? ? "服薬済み" : "未服薬" %></td>
+        <td><%= medication_record.recorded_by.name %></td>
+        <td><%= medication_record.note %></td>
+        <td>
+          <% if policy(medication_record).update? %>
+            <%= link_to "編集", edit_care_recipient_medication_record_path(@care_recipient, medication_record) %>
+          <% end %>
+          <% if policy(medication_record).destroy? %>
+            <%= button_to "削除", care_recipient_medication_record_path(@care_recipient, medication_record), method: :delete, data: { confirm: "削除しますか？" }, class: "btn btn-delete" %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

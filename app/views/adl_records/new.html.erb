@@ -1,0 +1,5 @@
+<h2><%= @care_recipient.name %>さんのADL記録 - 新規</h2>
+
+<%= render "form", care_recipient: @care_recipient, adl_record: @adl_record %>
+
+<%= link_to "一覧に戻る", care_recipient_adl_records_path(@care_recipient) %>
