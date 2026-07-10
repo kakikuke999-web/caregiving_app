@@ -2,13 +2,15 @@
 
 <h2><%= @care_recipient.name %> さんの訪問予定・実績</h2>
 
-<div class="calendar-legend">
-  <span class="status-dot" style="background: <%= VisitReportsController::STATUS_COLORS["planned"] %>"></span>予定
-  <span class="status-dot" style="background: <%= VisitReportsController::STATUS_COLORS["completed"] %>"></span>完了
-  <span class="status-dot" style="background: <%= VisitReportsController::STATUS_COLORS["missed"] %>"></span>未実施
-</div>
+<div class="panel">
+  <div class="calendar-legend">
+    <span class="status-dot" style="background: <%= VisitReportsController::STATUS_COLORS["planned"] %>"></span>予定
+    <span class="status-dot" style="background: <%= VisitReportsController::STATUS_COLORS["completed"] %>"></span>完了
+    <span class="status-dot" style="background: <%= VisitReportsController::STATUS_COLORS["missed"] %>"></span>未実施
+  </div>
 
-<div id="calendar" data-care-recipient-id="<%= @care_recipient.id %>" data-can-manage-visits="<%= can_manage_visits %>"></div>
+  <div id="calendar" data-care-recipient-id="<%= @care_recipient.id %>" data-can-manage-visits="<%= can_manage_visits %>"></div>
+</div>
 
 <!-- モーダル構造（Bootstrap 5） -->
 <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">

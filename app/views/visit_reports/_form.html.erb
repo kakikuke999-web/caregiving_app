@@ -34,7 +34,7 @@
 
   <div class="mb-3">
     <%= f.label :status, "ステータス" %>
-    <%= f.select :status, VisitReport.statuses.keys.map { |s| [s.humanize, s] }, {}, class: "form-select" %>
+    <%= f.select :status, VisitReport.statuses.keys.map { |s| [VisitReportsController::STATUS_LABELS[s], s] }, {}, class: "form-select" %>
   </div>
 
   <%= f.submit "保存", class: "btn btn-primary" %>

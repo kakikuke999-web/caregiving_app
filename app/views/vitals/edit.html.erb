@@ -1,5 +1,7 @@
 <h2><%= @care_recipient.name %>さんのバイタル記録 - 編集</h2>
 
-<%= render "form", care_recipient: @care_recipient, vital: @vital %>
+<div class="panel">
+  <%= render "form", care_recipient: @care_recipient, vital: @vital %>
+</div>
 
 <%= link_to "一覧に戻る", care_recipient_vitals_path(@care_recipient) %>

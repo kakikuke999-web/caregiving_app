@@ -1,17 +1,19 @@
 <h2>ユーザー編集</h2>
 
-<%= form_with model: @user, local: true do |f| %>
-  <div class="field">
-    <%= f.label :email %><br>
-    <%= f.text_field :email, disabled: true %>
-  </div>
+<div class="panel">
+  <%= form_with model: @user, local: true do |f| %>
+    <div class="field">
+      <%= f.label :email %><br>
+      <%= f.text_field :email, disabled: true %>
+    </div>
 
-  <div class="field">
-    <%= f.label :role %><br>
-    <%= f.select :role, User.roles.keys.map { |r| [r.humanize, r] } %>
-  </div>
+    <div class="field">
+      <%= f.label :role %><br>
+      <%= f.select :role, User.roles.keys.map { |r| [r.humanize, r] }, {}, class: "form-select" %>
+    </div>
 
-  <div class="actions">
-    <%= f.submit "更新する" %>
-  </div>
-<% end %>
+    <div class="actions">
+      <%= f.submit "更新する", class: "btn btn-new" %>
+    </div>
+  <% end %>
+</div>

@@ -1,5 +1,7 @@
 <h2><%= @care_recipient.name %>さんのADL記録 - 編集</h2>
 
-<%= render "form", care_recipient: @care_recipient, adl_record: @adl_record %>
+<div class="panel">
+  <%= render "form", care_recipient: @care_recipient, adl_record: @adl_record %>
+</div>
 
 <%= link_to "一覧に戻る", care_recipient_adl_records_path(@care_recipient) %>

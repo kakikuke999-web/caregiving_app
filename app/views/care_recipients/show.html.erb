@@ -1,7 +1,4 @@
-<p style="color: green"><%= notice %></p>
-<p style="color: red"><%= alert %></p>
-
-<div class="care-recipient-basic">
+<div class="care-recipient-basic panel">
   <% if @care_recipient.photo.attached? %>
     <%= image_tag @care_recipient.photo.variant(resize_to_fill: [150, 150]), class: "care-photo" %>
   <% end %>
@@ -10,16 +7,15 @@
   <p><strong>生年月日:</strong> <%= @care_recipient.birthday %>(<%= @care_recipient.age %>歳)</p>
   <p><strong>住所:</strong> <%= @care_recipient.address %></p>
   <p><strong>介護度:</strong> <%= @care_recipient.care_level %></p>
+
+  <div class="actions">
+    <%= link_to "編集", edit_care_recipient_path(@care_recipient), class: "btn btn-edit" %>
+    <%= link_to "対象者一覧に戻る", care_recipients_path, class: "btn btn-show" %>
+    <%= button_to "削除", @care_recipient, method: :delete, data: { confirm: "削除しますか？" }, class: "btn btn-delete" %>
+  </div>
 </div>
 
-<div>
-  <%= link_to "編集", edit_care_recipient_path(@care_recipient) %> |
-  <%= link_to "対象者一覧に戻る", care_recipients_path %>
-
-  <%= button_to "削除", @care_recipient, method: :delete, data: { confirm: "削除しますか？" } %>
-</div>
-
-<div class="medical-info">
+<div class="medical-info panel">
   <h3>医療・介護情報</h3>
   <p><strong>かかりつけ医:</strong> <%= @care_recipient.primary_doctor %></p>
   <p><strong>かかりつけ医療機関:</strong> <%= @care_recipient.primary_hospital %></p>
@@ -29,7 +25,7 @@
   <p><strong>メモ:</strong> <%= @care_recipient.memo %></p>
 </div>
 
-<div class="emergency-contacts">
+<div class="emergency-contacts panel">
   <h3>緊急連絡先</h3>
 
   <% if @care_recipient.emergency_contacts.any? %>
@@ -51,11 +47,11 @@
   <% end %>
 
   <% if policy(@care_recipient).update? %>
-    <%= link_to "緊急連絡先を追加", new_care_recipient_emergency_contact_path(@care_recipient) %>
+    <%= link_to "緊急連絡先を追加", new_care_recipient_emergency_contact_path(@care_recipient), class: "btn btn-show" %>
   <% end %>
 </div>
 
-<div class="health-trends">
+<div class="health-trends panel">
   <h3>健康推移</h3>
   <ul>
     <li><%= link_to "バイタル(血圧・脈拍・体温・体重・血糖値)", care_recipient_vitals_path(@care_recipient) %></li>
@@ -74,7 +70,7 @@
 </div>
 
 <% if policy(@care_recipient).update? %>
-  <div class="family-memberships">
+  <div class="family-memberships panel">
     <h3>家族アカウントの紐付け</h3>
 
     <% if @care_recipient.family_memberships.any? %>
@@ -95,7 +91,7 @@
     <% if available_family_users.any? %>
       <%= form_with url: care_recipient_family_memberships_path(@care_recipient), method: :post, scope: :family_membership do |f| %>
         <%= f.select :user_id, available_family_users.map { |u| ["#{u.name} (#{u.email})", u.id] } %>
-        <%= f.submit "家族として追加" %>
+        <%= f.submit "家族として追加", class: "btn btn-show" %>
       <% end %>
     <% else %>
       <p>紐付け可能な家族アカウント(familyロール)がありません</p>

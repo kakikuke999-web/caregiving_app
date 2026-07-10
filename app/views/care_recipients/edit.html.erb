@@ -1,10 +1,10 @@
-<h1>Editing care recipient</h1>
+<h1>対象者情報の編集</h1>
 
-<%= render "form", care_recipient: @care_recipient %>
-
-<br>
+<div class="panel">
+  <%= render "form", care_recipient: @care_recipient %>
+</div>
 
 <div>
-  <%= link_to "Show this care recipient", @care_recipient %> |
-  <%= link_to "Back to care recipients", care_recipients_path %>
+  <%= link_to "対象者の詳細を見る", @care_recipient %> |
+  <%= link_to "対象者一覧に戻る", care_recipients_path %>
 </div>
