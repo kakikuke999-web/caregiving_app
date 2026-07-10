@@ -1,7 +1,7 @@
 <%= form_with model: [care_recipient, medication_record], local: true do |f| %>
   <% if medication_record.errors.any? %>
     <div class="alert alert-danger">
-      <h2><%= pluralize(medication_record.errors.count, "error") %> prohibited this medication_record from being saved:</h2>
+      <h2><%= medication_record.errors.count %>件のエラーにより保存できませんでした:</h2>
       <ul>
         <% medication_record.errors.each do |error| %>
           <li><%= error.full_message %></li>

@@ -1,7 +1,7 @@
 <%= form_with(model: care_recipient) do |form| %>
   <% if care_recipient.errors.any? %>
     <div style="color: red">
-      <h2><%= pluralize(care_recipient.errors.count, "error") %> prohibited this care_recipient from being saved:</h2>
+      <h2><%= care_recipient.errors.count %>件のエラーにより保存できませんでした:</h2>
 
       <ul>
         <% care_recipient.errors.each do |error| %>

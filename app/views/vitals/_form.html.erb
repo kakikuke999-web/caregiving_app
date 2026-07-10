@@ -1,7 +1,7 @@
 <%= form_with model: [care_recipient, vital], local: true do |f| %>
   <% if vital.errors.any? %>
     <div class="alert alert-danger">
-      <h2><%= pluralize(vital.errors.count, "error") %> prohibited this vital from being saved:</h2>
+      <h2><%= vital.errors.count %>件のエラーにより保存できませんでした:</h2>
       <ul>
         <% vital.errors.each do |error| %>
           <li><%= error.full_message %></li>

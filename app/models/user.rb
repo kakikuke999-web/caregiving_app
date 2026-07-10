@@ -6,6 +6,17 @@ class User < ApplicationRecord
     admin: 0
   }
 
+  ROLE_LABELS = {
+    "admin" => "管理者",
+    "care_manager" => "ケアマネージャー",
+    "staff" => "スタッフ",
+    "family" => "家族"
+  }.freeze
+
+  def role_label
+    ROLE_LABELS[role] || "未設定"
+  end
+
   has_many :family_memberships, dependent: :destroy
   has_many :care_recipients, through: :family_memberships
 

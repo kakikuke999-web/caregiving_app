@@ -34,6 +34,7 @@
     const calendar = new FullCalendar.Calendar(calendarEl, {
       plugins: [FullCalendar.DayGrid.default],
       initialView: 'dayGridMonth',
+      locale: 'ja',
       events: '/calendar_events',
 
       eventClick: function(info) {

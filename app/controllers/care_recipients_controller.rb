@@ -35,7 +35,7 @@ class CareRecipientsController < ApplicationController
 
     respond_to do |format|
       if @care_recipient.save
-        format.html { redirect_to @care_recipient, notice: "Care recipient was successfully created." }
+        format.html { redirect_to @care_recipient, notice: "対象者を登録しました" }
         format.json { render :show, status: :created, location: @care_recipient }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -54,7 +54,7 @@ class CareRecipientsController < ApplicationController
 
   respond_to do |format|
       if @care_recipient.update(care_recipient_params)
-        format.html { redirect_to @care_recipient, notice: "Care recipient was successfully updated.", status: :see_other }
+        format.html { redirect_to @care_recipient, notice: "対象者情報を更新しました", status: :see_other }
         format.json { render :show, status: :ok, location: @care_recipient }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -69,7 +69,7 @@ class CareRecipientsController < ApplicationController
     @care_recipient.destroy!
 
     respond_to do |format|
-      format.html { redirect_to care_recipients_path, notice: "Care recipient was successfully destroyed.", status: :see_other }
+      format.html { redirect_to care_recipients_path, notice: "対象者を削除しました", status: :see_other }
       format.json { head :no_content }
     end
   end

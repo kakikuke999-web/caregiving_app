@@ -35,8 +35,9 @@
     const canManageVisits = calendarEl.dataset.canManageVisits === 'true';
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
-      plugins: [FullCalendar.DayGrid.default],
+      plugins: [FullCalendar.DayGrid.default, FullCalendar.Interaction.default],
       initialView: 'dayGridMonth',
+      locale: 'ja',
       events: `/care_recipients/${careRecipientId}/visit_events`,
 
       dateClick: function (info) {

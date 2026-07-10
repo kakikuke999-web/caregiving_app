@@ -4,8 +4,8 @@
   <table>
     <thead>
       <tr>
-        <th>Email</th>
-        <th>Role</th>
+        <th>メールアドレス</th>
+        <th>ロール</th>
         <th>操作</th>
       </tr>
     </thead>
@@ -13,7 +13,7 @@
       <% @users.each do |user| %>
         <tr>
           <td><%= user.email %></td>
-          <td><%= user.role&.humanize || "未設定" %></td>
+          <td><%= user.role_label %></td>
           <td><%= link_to "編集", edit_user_path(user) %></td>
         </tr>
       <% end %>
