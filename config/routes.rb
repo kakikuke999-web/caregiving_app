@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   post "show_menu", to: "home#show_menu"
 
   get "dashboard", to: "dashboard#index"
+  get "calendar", to: "calendar#index"
+  get "calendar_events", to: "visit_reports#calendar_events_all"
 
   resources :care_recipients do
     member do

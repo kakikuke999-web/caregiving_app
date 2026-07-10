@@ -1,6 +1,4 @@
-<% can_manage_visits = policy(VisitReport.new(care_recipient: @care_recipient)).create? %>
-
-<h2><%= @care_recipient.name %> さんの訪問予定・実績</h2>
+<h1>全対象者カレンダー</h1>
 
 <div class="calendar-legend">
   <span class="status-dot" style="background: <%= VisitReportsController::STATUS_COLORS["planned"] %>"></span>予定
@@ -8,7 +6,7 @@
   <span class="status-dot" style="background: <%= VisitReportsController::STATUS_COLORS["missed"] %>"></span>未実施
 </div>
 
-<div id="calendar" data-care-recipient-id="<%= @care_recipient.id %>" data-can-manage-visits="<%= can_manage_visits %>"></div>
+<div id="calendar"></div>
 
 <!-- モーダル構造（Bootstrap 5） -->
 <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
@@ -25,28 +23,21 @@
   </div>
 </div>
 
+<%= link_to "ダッシュボードに戻る", dashboard_path, class: "btn btn-show" %>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
-    const careRecipientId = calendarEl.dataset.careRecipientId;
-    const canManageVisits = calendarEl.dataset.canManageVisits === 'true';
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
       plugins: [FullCalendar.DayGrid.default],
       initialView: 'dayGridMonth',
-      events: `/care_recipients/${careRecipientId}/visit_events`,
-
-      dateClick: function (info) {
-        if (!canManageVisits) return;
-        window.location.href = `/visit_reports/new?care_recipient_id=${careRecipientId}&visited_at=${info.dateStr}`;
-      },
+      events: '/calendar_events',
 
       eventClick: function(info) {
         const props = info.event.extendedProps;
-        const endpoint = canManageVisits ? `/visit_reports/${props.id}/edit` : `/visit_reports/${props.id}`;
 
-        fetch(endpoint, { headers: { 'Accept': 'text/vnd.turbo-stream.html' } })
+        fetch(`/visit_reports/${props.id}/edit`, { headers: { 'Accept': 'text/vnd.turbo-stream.html' } })
           .then(response => response.text())
           .then(html => {
             document.getElementById('modal-body').innerHTML = html;

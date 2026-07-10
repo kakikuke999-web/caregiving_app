@@ -1,2 +1,15 @@
-<h1>VisitReports#show</h1>
-<p>Find me in app/views/visit_reports/show.html.erb</p>
+<h2>訪問記録の詳細</h2>
+
+<%= render partial: "details", locals: { report: @visit_report } %>
+
+<div>
+  <% if policy(@visit_report).update? %>
+    <%= link_to "編集", edit_visit_report_path(@visit_report), class: "btn btn-edit" %>
+  <% end %>
+
+  <% if policy(@visit_report).destroy? %>
+    <%= button_to "削除", @visit_report, method: :delete, data: { confirm: "この訪問記録を削除しますか？" }, class: "btn btn-delete" %>
+  <% end %>
+
+  <%= link_to "カレンダーに戻る", calendar_care_recipient_path(@visit_report.care_recipient), class: "btn btn-show" %>
+</div>

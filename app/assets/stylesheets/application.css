@@ -220,3 +220,22 @@
 .status-badge.warning { background: #fff3d6; color: #8a5a00; }
 .status-badge.critical { background: #fbe3e3; color: #a12323; }
 
+.calendar-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 10px 0;
+  font-size: 13px;
+  color: #52514e;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+

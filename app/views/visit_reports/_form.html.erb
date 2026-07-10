@@ -1,4 +1,17 @@
 <%= form_with model: report, local: true do |f| %>
+  <% if report.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= pluralize(report.errors.count, "error") %> prohibited this visit report from being saved:</h2>
+      <ul>
+        <% report.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.hidden_field :care_recipient_id %>
+
   <div class="mb-3">
     <%= f.label :visited_at, "訪問日時" %>
     <%= f.datetime_select :visited_at, class: "form-control" %>
@@ -25,4 +38,8 @@
   </div>
 
   <%= f.submit "保存", class: "btn btn-primary" %>
+<% end %>
+
+<% if report.persisted? && policy(report).destroy? %>
+  <%= button_to "削除", report, method: :delete, data: { confirm: "この訪問記録を削除しますか？" }, class: "btn btn-delete" %>
 <% end %>
