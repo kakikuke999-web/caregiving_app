@@ -9,6 +9,8 @@ Rails.application.routes.draw do
 
   post "show_menu", to: "home#show_menu"
 
+  get "dashboard", to: "dashboard#index"
+
   resources :care_recipients do
     member do
       get :calendar  # ← 名前付きルートは `calendar_care_recipient_path`
@@ -19,6 +21,7 @@ Rails.application.routes.draw do
     resources :vitals
     resources :adl_records
     resources :medication_records
+    resources :emergency_contacts, except: [:index, :show]
   end
 
   resources :visit_reports

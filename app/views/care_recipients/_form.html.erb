@@ -34,10 +34,28 @@
     <%= form.text_field :address, class: "form-control address-field" %>
   </div>
 
-  <!-- 緊急連絡先 -->
+  <!-- かかりつけ医 -->
   <div>
-    <%= form.label :emergency_contact, "緊急連絡先", style: "display: block" %>
-    <%= form.text_field :emergency_contact, class: "form-control" %>
+    <%= form.label :primary_doctor, "かかりつけ医", style: "display: block" %>
+    <%= form.text_field :primary_doctor, class: "form-control" %>
+  </div>
+
+  <!-- かかりつけ医療機関 -->
+  <div>
+    <%= form.label :primary_hospital, "かかりつけ医療機関", style: "display: block" %>
+    <%= form.text_field :primary_hospital, class: "form-control" %>
+  </div>
+
+  <!-- 既往歴 -->
+  <div>
+    <%= form.label :medical_history, "既往歴", style: "display: block" %>
+    <%= form.text_area :medical_history, rows: 4, class: "form-control" %>
+  </div>
+
+  <!-- 現在服用中の薬 -->
+  <div>
+    <%= form.label :regular_medications, "現在服用中の薬", style: "display: block" %>
+    <%= form.text_area :regular_medications, rows: 4, class: "form-control" %>
   </div>
 
   <!-- アレルギー -->

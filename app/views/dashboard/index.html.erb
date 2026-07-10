@@ -1,0 +1,77 @@
+<h1>ケアマネージャー向けダッシュボード</h1>
+
+<div class="dashboard-stats">
+  <div class="stat-tile">
+    <div class="stat-label">対象者数</div>
+    <div class="stat-value"><%= @total_count %></div>
+  </div>
+
+  <div class="stat-tile <%= "stat-warning" if @stale_count > 0 %>">
+    <div class="stat-label">7日以上記録なし</div>
+    <div class="stat-value"><%= @stale_count %></div>
+  </div>
+
+  <div class="stat-tile">
+    <div class="stat-label">本日の訪問予定</div>
+    <div class="stat-value"><%= @visits_today_count %></div>
+  </div>
+
+  <div class="stat-tile <%= "stat-critical" if @missed_visits_count > 0 %>">
+    <div class="stat-label">未実施の訪問(累計)</div>
+    <div class="stat-value"><%= @missed_visits_count %></div>
+  </div>
+</div>
+
+<% if @recipient_rows.empty? %>
+  <p>対象者が登録されていません。</p>
+<% else %>
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>氏名</th>
+          <th>介護度</th>
+          <th>直近の記録</th>
+          <th>次回訪問予定</th>
+          <th>未実施件数</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @recipient_rows.each do |row| %>
+          <% care_recipient = row[:care_recipient] %>
+          <tr>
+            <td><%= link_to care_recipient.name, care_recipient %></td>
+            <td><%= care_recipient.care_level %></td>
+            <td>
+              <% if row[:last_recorded_at] %>
+                <%= l(row[:last_recorded_at], format: :short) %>
+              <% end %>
+              <% if row[:stale] %>
+                <span class="status-badge warning">⚠ 要確認</span>
+              <% end %>
+            </td>
+            <td>
+              <% if row[:next_visit] %>
+                <%= l(row[:next_visit].visited_at, format: :short) %>
+              <% else %>
+                <span class="stat-label">予定なし</span>
+              <% end %>
+            </td>
+            <td>
+              <% if row[:missed_count] > 0 %>
+                <span class="status-badge critical">✕ <%= row[:missed_count] %>件</span>
+              <% else %>
+                0
+              <% end %>
+            </td>
+            <td>
+              <%= link_to "プロフィール", care_recipient, class: "btn btn-show" %>
+              <%= link_to "カレンダー", calendar_care_recipient_path(care_recipient), class: "btn btn-edit" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

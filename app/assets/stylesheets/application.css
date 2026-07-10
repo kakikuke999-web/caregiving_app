@@ -180,3 +180,43 @@
   max-width: 500px;
 }
 
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.stat-tile {
+  background: #fff;
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.stat-tile .stat-label {
+  font-size: 13px;
+  color: #52514e;
+}
+
+.stat-tile .stat-value {
+  font-size: 28px;
+  font-weight: 600;
+  color: #0b0b0b;
+}
+
+.stat-tile.stat-warning .stat-value { color: #8a5a00; }
+.stat-tile.stat-critical .stat-value { color: #a12323; }
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge.warning { background: #fff3d6; color: #8a5a00; }
+.status-badge.critical { background: #fbe3e3; color: #a12323; }
+

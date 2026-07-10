@@ -1,0 +1,5 @@
+<h2><%= @care_recipient.name %>さんの緊急連絡先 - 新規</h2>
+
+<%= render "form", care_recipient: @care_recipient, emergency_contact: @emergency_contact %>
+
+<%= link_to "プロフィールに戻る", @care_recipient %>

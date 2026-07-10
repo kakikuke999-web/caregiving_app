@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_07_09_102704) do
+ActiveRecord::Schema[7.1].define(version: 2026_07_09_211645) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -68,7 +68,6 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_09_102704) do
   create_table "care_recipients", force: :cascade do |t|
     t.string "name"
     t.date "dob"
-    t.string "emergency_contact"
     t.text "allergies"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -76,6 +75,22 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_09_102704) do
     t.string "care_level"
     t.date "birthday"
     t.text "memo"
+    t.text "medical_history"
+    t.string "primary_doctor"
+    t.string "primary_hospital"
+    t.text "regular_medications"
+  end
+
+  create_table "emergency_contacts", force: :cascade do |t|
+    t.bigint "care_recipient_id", null: false
+    t.string "name"
+    t.string "relationship"
+    t.string "phone_number"
+    t.integer "priority", default: 1, null: false
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["care_recipient_id"], name: "index_emergency_contacts_on_care_recipient_id"
   end
 
   create_table "family_memberships", force: :cascade do |t|
@@ -156,6 +171,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_09_102704) do
   add_foreign_key "adl_records", "users", column: "recorded_by_id"
   add_foreign_key "care_recipient_visit_types", "care_recipients"
   add_foreign_key "care_recipient_visit_types", "visit_types"
+  add_foreign_key "emergency_contacts", "care_recipients"
   add_foreign_key "family_memberships", "care_recipients"
   add_foreign_key "family_memberships", "users"
   add_foreign_key "medication_records", "care_recipients"

@@ -1,13 +1,58 @@
 <p style="color: green"><%= notice %></p>
 <p style="color: red"><%= alert %></p>
 
-<%= render @care_recipient %>
+<div class="care-recipient-basic">
+  <% if @care_recipient.photo.attached? %>
+    <%= image_tag @care_recipient.photo.variant(resize_to_fill: [150, 150]), class: "care-photo" %>
+  <% end %>
+
+  <h2><%= @care_recipient.name %></h2>
+  <p><strong>生年月日:</strong> <%= @care_recipient.birthday %>(<%= @care_recipient.age %>歳)</p>
+  <p><strong>住所:</strong> <%= @care_recipient.address %></p>
+  <p><strong>介護度:</strong> <%= @care_recipient.care_level %></p>
+</div>
 
 <div>
-  <%= link_to "Edit this care recipient", edit_care_recipient_path(@care_recipient) %> |
-  <%= link_to "Back to care recipients", care_recipients_path %>
+  <%= link_to "編集", edit_care_recipient_path(@care_recipient) %> |
+  <%= link_to "対象者一覧に戻る", care_recipients_path %>
 
-  <%= button_to "Destroy this care recipient", @care_recipient, method: :delete %>
+  <%= button_to "削除", @care_recipient, method: :delete, data: { confirm: "削除しますか？" } %>
+</div>
+
+<div class="medical-info">
+  <h3>医療・介護情報</h3>
+  <p><strong>かかりつけ医:</strong> <%= @care_recipient.primary_doctor %></p>
+  <p><strong>かかりつけ医療機関:</strong> <%= @care_recipient.primary_hospital %></p>
+  <p><strong>既往歴:</strong> <%= @care_recipient.medical_history %></p>
+  <p><strong>現在服用中の薬:</strong> <%= @care_recipient.regular_medications %></p>
+  <p><strong>アレルギー:</strong> <%= @care_recipient.allergies %></p>
+  <p><strong>メモ:</strong> <%= @care_recipient.memo %></p>
+</div>
+
+<div class="emergency-contacts">
+  <h3>緊急連絡先</h3>
+
+  <% if @care_recipient.emergency_contacts.any? %>
+    <ul>
+      <% @care_recipient.emergency_contacts.each do |contact| %>
+        <li>
+          <%= contact.name %>(<%= contact.relationship %>) <%= contact.phone_number %>
+          <% if contact.note.present? %> - <%= contact.note %><% end %>
+          <% if policy(@care_recipient).update? %>
+            <%= link_to "編集", edit_care_recipient_emergency_contact_path(@care_recipient, contact) %>
+            <%= button_to "削除", care_recipient_emergency_contact_path(@care_recipient, contact),
+                  method: :delete, data: { confirm: "この緊急連絡先を削除しますか？" }, class: "btn btn-delete" %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>登録された緊急連絡先はありません</p>
+  <% end %>
+
+  <% if policy(@care_recipient).update? %>
+    <%= link_to "緊急連絡先を追加", new_care_recipient_emergency_contact_path(@care_recipient) %>
+  <% end %>
 </div>
 
 <div class="health-trends">
@@ -17,6 +62,15 @@
     <li><%= link_to "ADL記録(食事・排泄・睡眠)", care_recipient_adl_records_path(@care_recipient) %></li>
     <li><%= link_to "服薬記録", care_recipient_medication_records_path(@care_recipient) %></li>
   </ul>
+
+  <% if @recent_records.present? %>
+    <h4>最近の記録</h4>
+    <ul>
+      <% @recent_records.each do |record| %>
+        <li><%= l(record[:recorded_at], format: :short) if record[:recorded_at] %> [<%= record[:type] %>] <%= record[:summary] %></li>
+      <% end %>
+    </ul>
+  <% end %>
 </div>
 
 <% if policy(@care_recipient).update? %>

@@ -1,5 +1,9 @@
 <h1>ようこそ、<%= current_user.name %> さん</h1>
 
+<% if current_user.admin? || current_user.care_manager? %>
+  <p><%= link_to "ケアマネージャー向けダッシュボード", dashboard_path, class: "btn btn-show" %></p>
+<% end %>
+
 <h2>対象者を選択してください</h2>
 
 <%= form_with url: show_menu_path, method: :post, local: true do %>

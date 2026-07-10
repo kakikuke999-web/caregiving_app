@@ -9,6 +9,7 @@ class CareRecipientsController < ApplicationController
   # GET /care_recipients/1 or /care_recipients/1.json
   def show
     authorize @care_recipient
+    @recent_records = recent_health_records
   end
 
   # GET /care_recipients/new
@@ -81,6 +82,17 @@ class CareRecipientsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def care_recipient_params
-      params.require(:care_recipient).permit(:name, :birthday, :address, :care_level, :memo, :photo, :emergency_contact, :allergies)
+      params.require(:care_recipient).permit(:name, :birthday, :address, :care_level, :memo, :photo, :allergies,
+        :medical_history, :primary_doctor, :primary_hospital, :regular_medications)
+    end
+
+    # 健康推移(バイタル・ADL・服薬記録)を横断した直近3件のプレビュー
+    def recent_health_records
+      records =
+        @care_recipient.vitals.order(recorded_at: :desc).limit(3).map { |v| { type: "バイタル", recorded_at: v.recorded_at, summary: v.label } } +
+        @care_recipient.adl_records.order(recorded_at: :desc).limit(3).map { |a| { type: "ADL記録", recorded_at: a.recorded_at, summary: "食事:#{AdlRecord::MEAL_INTAKE_LABELS[a.meal_intake]}" } } +
+        @care_recipient.medication_records.order(recorded_at: :desc).limit(3).map { |m| { type: "服薬記録", recorded_at: m.recorded_at, summary: m.medication_name } }
+
+      records.sort_by { |r| r[:recorded_at] || Time.at(0) }.reverse.first(3)
     end
 end

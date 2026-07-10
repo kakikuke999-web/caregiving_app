@@ -24,3 +24,8 @@ staff_one:
   email: staff_one@example.com
   name: Staff One
   role: 2
+
+care_manager_one:
+  email: care_manager_one@example.com
+  name: Care Manager One
+  role: 1

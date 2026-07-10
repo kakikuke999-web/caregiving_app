@@ -1,0 +1,16 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  care_recipient: one
+  name: 山田花子
+  relationship: 長女
+  phone_number: "090-1111-2222"
+  priority: 1
+  note: MyText
+
+two:
+  care_recipient: two
+  name: 佐藤次郎
+  relationship: 長男
+  phone_number: "090-3333-4444"
+  priority: 1

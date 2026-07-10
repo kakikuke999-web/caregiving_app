@@ -9,6 +9,7 @@ class CareRecipient < ApplicationRecord
     has_many :vitals, dependent: :destroy
     has_many :adl_records, dependent: :destroy
     has_many :medication_records, dependent: :destroy
+    has_many :emergency_contacts, -> { order(:priority) }, dependent: :destroy
     has_many :care_recipient_visit_types, dependent: :destroy
     has_many :visit_types, through: :care_recipient_visit_types
 
