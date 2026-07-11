@@ -1,4 +1,5 @@
 <% can_manage_visits = policy(VisitReport.new(care_recipient: @care_recipient)).create? %>
+<% can_manage_schedules = policy(@care_recipient.personal_schedules.new).create? %>
 
 <h2><%= @care_recipient.name %> さんの訪問予定・実績</h2>
 
@@ -7,9 +8,16 @@
     <span class="status-dot" style="background: <%= VisitReportsController::STATUS_COLORS["planned"] %>"></span>予定
     <span class="status-dot" style="background: <%= VisitReportsController::STATUS_COLORS["completed"] %>"></span>完了
     <span class="status-dot" style="background: <%= VisitReportsController::STATUS_COLORS["missed"] %>"></span>未実施
+    <span class="status-dot" style="background: <%= PersonalSchedulesController::COLOR %>"></span>本人の予定
   </div>
 
-  <div id="calendar" data-care-recipient-id="<%= @care_recipient.id %>" data-can-manage-visits="<%= can_manage_visits %>"></div>
+  <% if can_manage_schedules %>
+    <p><%= link_to "本人の予定を追加", new_care_recipient_personal_schedule_path(@care_recipient), class: "btn btn-show" %></p>
+  <% end %>
+
+  <div id="calendar" data-care-recipient-id="<%= @care_recipient.id %>"
+       data-can-manage-visits="<%= can_manage_visits %>"
+       data-can-manage-schedules="<%= can_manage_schedules %>"></div>
 </div>
 
 <!-- モーダル構造（Bootstrap 5） -->
@@ -33,21 +41,33 @@
     const calendarEl = document.getElementById('calendar');
     const careRecipientId = calendarEl.dataset.careRecipientId;
     const canManageVisits = calendarEl.dataset.canManageVisits === 'true';
+    const canManageSchedules = calendarEl.dataset.canManageSchedules === 'true';
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
       plugins: [FullCalendar.DayGrid.default, FullCalendar.Interaction.default],
       initialView: 'dayGridMonth',
       locale: 'ja',
-      events: `/care_recipients/${careRecipientId}/visit_events`,
+      eventSources: [
+        `/care_recipients/${careRecipientId}/visit_events`,
+        `/care_recipients/${careRecipientId}/personal_schedule_events`
+      ],
 
       dateClick: function (info) {
-        if (!canManageVisits) return;
-        window.location.href = `/visit_reports/new?care_recipient_id=${careRecipientId}&visited_at=${info.dateStr}`;
+        if (canManageVisits) {
+          window.location.href = `/visit_reports/new?care_recipient_id=${careRecipientId}&visited_at=${info.dateStr}`;
+        } else if (canManageSchedules) {
+          window.location.href = `/care_recipients/${careRecipientId}/personal_schedules/new?started_at=${info.dateStr}`;
+        }
       },
 
       eventClick: function(info) {
         const props = info.event.extendedProps;
-        const endpoint = canManageVisits ? `/visit_reports/${props.id}/edit` : `/visit_reports/${props.id}`;
+        let endpoint;
+        if (props.kind === 'personal_schedule') {
+          endpoint = `/care_recipients/${careRecipientId}/personal_schedules/${props.id}/edit`;
+        } else {
+          endpoint = canManageVisits ? `/visit_reports/${props.id}/edit` : `/visit_reports/${props.id}`;
+        }
 
         fetch(endpoint, { headers: { 'Accept': 'text/vnd.turbo-stream.html' } })
           .then(response => response.text())

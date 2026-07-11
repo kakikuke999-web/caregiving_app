@@ -1,0 +1,21 @@
+<%= form_with model: visit_type, local: true do |f| %>
+  <% if visit_type.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= visit_type.errors.count %>件のエラーにより保存できませんでした:</h2>
+      <ul>
+        <% visit_type.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name, "名称" %><br>
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "保存", class: "btn btn-new" %>
+  </div>
+<% end %>

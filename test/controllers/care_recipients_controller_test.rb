@@ -39,6 +39,16 @@ class CareRecipientsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to care_recipient_url(@care_recipient)
   end
 
+  test "should update the care_recipient's linked visit types" do
+    patch care_recipient_url(@care_recipient), params: {
+      care_recipient: {
+        name: @care_recipient.name, visit_type_ids: [visit_types(:one).id, visit_types(:two).id]
+      }
+    }
+    assert_redirected_to care_recipient_url(@care_recipient)
+    assert_equal [visit_types(:one), visit_types(:two)].sort_by(&:id), @care_recipient.reload.visit_types.sort_by(&:id)
+  end
+
   test "should destroy care_recipient" do
     assert_difference("CareRecipient.count", -1) do
       delete care_recipient_url(@care_recipient)

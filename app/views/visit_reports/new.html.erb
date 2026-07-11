@@ -1,5 +1,5 @@
 <h2><%= @visit_report.care_recipient.name %> さんの訪問記録を登録</h2>
 
 <div class="panel">
-  <%= render partial: 'form', locals: { report: @visit_report } %>
+  <%= render partial: 'form', locals: { report: @visit_report, available_visit_types: @available_visit_types } %>
 </div>

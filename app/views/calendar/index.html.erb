@@ -5,6 +5,7 @@
     <span class="status-dot" style="background: <%= VisitReportsController::STATUS_COLORS["planned"] %>"></span>予定
     <span class="status-dot" style="background: <%= VisitReportsController::STATUS_COLORS["completed"] %>"></span>完了
     <span class="status-dot" style="background: <%= VisitReportsController::STATUS_COLORS["missed"] %>"></span>未実施
+    <span class="status-dot" style="background: <%= PersonalSchedulesController::COLOR %>"></span>本人の予定
   </div>
 
   <div id="calendar"></div>
@@ -35,12 +36,15 @@
       plugins: [FullCalendar.DayGrid.default],
       initialView: 'dayGridMonth',
       locale: 'ja',
-      events: '/calendar_events',
+      eventSources: ['/calendar_events', '/personal_schedule_events'],
 
       eventClick: function(info) {
         const props = info.event.extendedProps;
+        const endpoint = props.kind === 'personal_schedule'
+          ? `/care_recipients/${props.care_recipient_id}/personal_schedules/${props.id}/edit`
+          : `/visit_reports/${props.id}/edit`;
 
-        fetch(`/visit_reports/${props.id}/edit`, { headers: { 'Accept': 'text/vnd.turbo-stream.html' } })
+        fetch(endpoint, { headers: { 'Accept': 'text/vnd.turbo-stream.html' } })
           .then(response => response.text())
           .then(html => {
             document.getElementById('modal-body').innerHTML = html;

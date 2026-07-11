@@ -21,6 +21,27 @@ class VisitReportsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "new defaults the assigned staff to the current user" do
+    get new_visit_report_url, params: { care_recipient_id: @visit_report.care_recipient_id }
+    assert_select "select#visit_report_user_id option[selected]", value: users(:one).id.to_s
+  end
+
+  test "new defaults the visit type when the care recipient has exactly one linked type" do
+    care_recipient = care_recipients(:one)
+    care_recipient.visit_types = [visit_types(:one)]
+
+    get new_visit_report_url, params: { care_recipient_id: care_recipient.id }
+    assert_select "select#visit_report_visit_type_id option[selected]", value: visit_types(:one).id.to_s
+  end
+
+  test "new offers all visit types when the care recipient has none linked" do
+    care_recipient = care_recipients(:one)
+    care_recipient.visit_types = []
+
+    get new_visit_report_url, params: { care_recipient_id: care_recipient.id }
+    assert_select "select#visit_report_visit_type_id option", count: VisitType.count + 1 # +1 for the blank prompt
+  end
+
   test "should get edit" do
     get edit_visit_report_url(@visit_report)
     assert_response :success
@@ -62,6 +83,44 @@ class VisitReportsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_equal users(:one), VisitReport.last.user
+  end
+
+  test "should create visit_report with a start and end time" do
+    assert_difference("VisitReport.count") do
+      post visit_reports_url, params: {
+        visit_report: {
+          care_recipient_id: care_recipients(:one).id,
+          visit_type_id: visit_types(:one).id,
+          user_id: users(:staff_one).id,
+          notes: "verification note",
+          status: "planned",
+          "visited_at(1i)" => "2026", "visited_at(2i)" => "8", "visited_at(3i)" => "1",
+          "visited_at(4i)" => "10", "visited_at(5i)" => "0",
+          "ended_at(1i)" => "2026", "ended_at(2i)" => "8", "ended_at(3i)" => "1",
+          "ended_at(4i)" => "11", "ended_at(5i)" => "0"
+        }
+      }
+    end
+
+    created = VisitReport.last
+    assert_equal 11, created.ended_at.hour
+  end
+
+  test "rejects an end time earlier than the start time" do
+    assert_no_difference("VisitReport.count") do
+      post visit_reports_url, params: {
+        visit_report: {
+          care_recipient_id: care_recipients(:one).id,
+          visit_type_id: visit_types(:one).id,
+          user_id: users(:staff_one).id,
+          status: "planned",
+          "visited_at(1i)" => "2026", "visited_at(2i)" => "8", "visited_at(3i)" => "1",
+          "visited_at(4i)" => "10", "visited_at(5i)" => "0",
+          "ended_at(1i)" => "2026", "ended_at(2i)" => "8", "ended_at(3i)" => "1",
+          "ended_at(4i)" => "9", "ended_at(5i)" => "0"
+        }
+      }
+    end
   end
 
   test "admin can destroy a visit_report" do

@@ -17,6 +17,8 @@ class User < ApplicationRecord
     ROLE_LABELS[role] || "未設定"
   end
 
+  scope :assignable_to_visits, -> { where(role: %i[admin care_manager staff]) }
+
   has_many :family_memberships, dependent: :destroy
   has_many :care_recipients, through: :family_memberships
 

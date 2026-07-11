@@ -17,6 +17,9 @@ class VisitReportsController < ApplicationController
   def new
     @visit_report = VisitReport.new(care_recipient_id: params[:care_recipient_id])
     @visit_report.visited_at = Time.zone.parse(params[:visited_at]) if params[:visited_at].present?
+    @visit_report.user_id = current_user.id
+    @available_visit_types = available_visit_types_for(@visit_report.care_recipient)
+    @visit_report.visit_type_id = @available_visit_types.first.id if @available_visit_types.count == 1
     authorize @visit_report
   end
 
@@ -27,6 +30,7 @@ class VisitReportsController < ApplicationController
     if @visit_report.save
       redirect_to @visit_report, notice: "訪問記録を登録しました"
     else
+      @available_visit_types = available_visit_types_for(@visit_report.care_recipient)
       render :new, status: :unprocessable_entity
     end
   end
@@ -46,6 +50,7 @@ class VisitReportsController < ApplicationController
 
   def edit
     @report = VisitReport.find(params[:id])
+    @available_visit_types = available_visit_types_for(@report.care_recipient)
     authorize @report
   end
 
@@ -60,6 +65,7 @@ class VisitReportsController < ApplicationController
         format.html { redirect_to calendar_care_recipient_path(@report.care_recipient), notice: '更新しました' }
       end
     else
+      @available_visit_types = available_visit_types_for(@report.care_recipient)
       render :edit, status: :unprocessable_entity
     end
   end
@@ -87,7 +93,14 @@ class VisitReportsController < ApplicationController
   private
 
   def visit_report_params
-    params.require(:visit_report).permit(:care_recipient_id, :visited_at, :user_id, :visit_type_id, :notes, :status)
+    params.require(:visit_report).permit(:care_recipient_id, :visited_at, :ended_at, :user_id, :visit_type_id, :notes, :status)
+  end
+
+  def available_visit_types_for(care_recipient)
+    return VisitType.order(:name) if care_recipient.nil?
+
+    linked = care_recipient.visit_types.order(:name)
+    linked.any? ? linked : VisitType.order(:name)
   end
 
   def event_json(report, include_recipient_name: false)
@@ -97,6 +110,7 @@ class VisitReportsController < ApplicationController
     {
       title: title,
       start: report.visited_at,
+      end: report.ended_at,
       color: STATUS_COLORS[report.status],
       extendedProps: {
         id: report.id,

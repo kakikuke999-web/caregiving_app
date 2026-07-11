@@ -1,6 +1,9 @@
 <h1>ケアマネージャー向けダッシュボード</h1>
 
-<p><%= link_to "全対象者カレンダーを見る", calendar_path, class: "btn btn-show" %></p>
+<p>
+  <%= link_to "全対象者カレンダーを見る", calendar_path, class: "btn btn-show" %>
+  <%= link_to "訪問タイプ管理", visit_types_path, class: "btn btn-edit" %>
+</p>
 
 <div class="dashboard-stats">
   <div class="stat-tile">

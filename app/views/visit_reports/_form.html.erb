@@ -13,18 +13,23 @@
   <%= f.hidden_field :care_recipient_id %>
 
   <div class="mb-3">
-    <%= f.label :visited_at, "訪問日時" %>
+    <%= f.label :visited_at, "開始時刻" %>
     <%= f.datetime_select :visited_at, class: "form-control" %>
   </div>
 
   <div class="mb-3">
+    <%= f.label :ended_at, "終了時刻" %>
+    <%= f.datetime_select :ended_at, include_blank: true, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
     <%= f.label :user_id, "担当者" %>
-    <%= f.collection_select :user_id, User.all, :id, :name, prompt: "選択してください", class: "form-select" %>
+    <%= f.collection_select :user_id, User.assignable_to_visits.order(:name), :id, :name, prompt: "選択してください", class: "form-select" %>
   </div>
 
   <div class="mb-3">
     <%= f.label :visit_type_id, "訪問タイプ" %>
-    <%= f.collection_select :visit_type_id, VisitType.all, :id, :name, prompt: "選択してください", class: "form-select" %>
+    <%= f.collection_select :visit_type_id, available_visit_types, :id, :name, prompt: "選択してください", class: "form-select" %>
   </div>
 
   <div class="mb-3">

@@ -1,0 +1,7 @@
+<h2><%= @care_recipient.name %> さんの予定を登録</h2>
+
+<div class="panel">
+  <%= render "form", care_recipient: @care_recipient, personal_schedule: @personal_schedule %>
+</div>
+
+<%= link_to "カレンダーに戻る", calendar_care_recipient_path(@care_recipient) %>

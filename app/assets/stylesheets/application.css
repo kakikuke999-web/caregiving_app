@@ -465,6 +465,16 @@ p.alert.flash {
   font-size: 12px;
 }
 
+.check-box-group label {
+  margin-right: 16px;
+  font-weight: normal;
+  display: inline-block;
+}
+
+.check-box-group input[type="checkbox"] {
+  margin-right: 4px;
+}
+
 #error_explanation {
   background: var(--color-danger-light);
   color: var(--color-danger-dark);

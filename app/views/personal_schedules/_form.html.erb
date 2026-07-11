@@ -1,0 +1,39 @@
+<%= form_with model: [care_recipient, personal_schedule], local: true do |f| %>
+  <% if personal_schedule.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= personal_schedule.errors.count %>件のエラーにより保存できませんでした:</h2>
+      <ul>
+        <% personal_schedule.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :title, "予定の内容" %>
+    <%= f.text_field :title, class: "form-control", placeholder: "例: 通院、外出、美容院" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :started_at, "開始時刻" %>
+    <%= f.datetime_select :started_at, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :ended_at, "終了時刻" %>
+    <%= f.datetime_select :ended_at, include_blank: true, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :notes, "メモ" %>
+    <%= f.text_area :notes, class: "form-control" %>
+  </div>
+
+  <%= f.submit "保存", class: "btn btn-primary" %>
+<% end %>
+
+<% if personal_schedule.persisted? && policy(personal_schedule).destroy? %>
+  <%= button_to "削除", [care_recipient, personal_schedule], method: :delete,
+        data: { confirm: "この予定を削除しますか？" }, class: "btn btn-delete" %>
+<% end %>

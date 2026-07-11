@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_07_09_211645) do
+ActiveRecord::Schema[7.1].define(version: 2026_07_11_203751) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -116,6 +116,19 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_09_211645) do
     t.index ["recorded_by_id"], name: "index_medication_records_on_recorded_by_id"
   end
 
+  create_table "personal_schedules", force: :cascade do |t|
+    t.bigint "care_recipient_id", null: false
+    t.bigint "created_by_id", null: false
+    t.string "title"
+    t.datetime "started_at"
+    t.datetime "ended_at"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["care_recipient_id"], name: "index_personal_schedules_on_care_recipient_id"
+    t.index ["created_by_id"], name: "index_personal_schedules_on_created_by_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -139,6 +152,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_09_211645) do
     t.datetime "updated_at", null: false
     t.bigint "visit_type_id"
     t.integer "status", default: 0, null: false
+    t.datetime "ended_at"
     t.index ["care_recipient_id"], name: "index_visit_reports_on_care_recipient_id"
     t.index ["user_id"], name: "index_visit_reports_on_user_id"
     t.index ["visit_type_id"], name: "index_visit_reports_on_visit_type_id"
@@ -176,6 +190,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_09_211645) do
   add_foreign_key "family_memberships", "users"
   add_foreign_key "medication_records", "care_recipients"
   add_foreign_key "medication_records", "users", column: "recorded_by_id"
+  add_foreign_key "personal_schedules", "care_recipients"
+  add_foreign_key "personal_schedules", "users", column: "created_by_id"
   add_foreign_key "visit_reports", "care_recipients"
   add_foreign_key "visit_reports", "users"
   add_foreign_key "visit_reports", "visit_types"

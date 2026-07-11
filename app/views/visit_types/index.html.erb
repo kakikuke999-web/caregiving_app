@@ -1,0 +1,30 @@
+<h1>訪問タイプ管理</h1>
+
+<% if @visit_types.empty? %>
+  <p>訪問タイプが登録されていません。</p>
+<% else %>
+  <div class="table-responsive">
+    <table>
+      <thead>
+        <tr>
+          <th>名称</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @visit_types.each do |visit_type| %>
+          <tr>
+            <td><%= visit_type.name %></td>
+            <td>
+              <%= link_to "編集", edit_visit_type_path(visit_type), class: "btn btn-edit" %>
+              <%= button_to "削除", visit_type_path(visit_type), method: :delete,
+                    data: { confirm: "この訪問タイプを削除しますか？" }, class: "btn btn-delete" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
+<p><%= link_to "新規登録", new_visit_type_path, class: "btn btn-new" %></p>

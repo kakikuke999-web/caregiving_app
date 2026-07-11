@@ -83,7 +83,7 @@ class CareRecipientsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def care_recipient_params
       params.require(:care_recipient).permit(:name, :birthday, :address, :care_level, :memo, :photo, :allergies,
-        :medical_history, :primary_doctor, :primary_hospital, :regular_medications)
+        :medical_history, :primary_doctor, :primary_hospital, :regular_medications, visit_type_ids: [])
     end
 
     # 健康推移(バイタル・ADL・服薬記録)を横断した直近3件のプレビュー

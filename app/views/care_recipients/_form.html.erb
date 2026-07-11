@@ -74,6 +74,18 @@
       ], prompt: "選択してください", class: "form-control" %>
   </div>
 
+  <!-- 利用する訪問タイプ -->
+  <div>
+    <%= form.label :visit_type_ids, "利用する訪問タイプ", style: "display: block" %>
+    <% if VisitType.any? %>
+      <div class="check-box-group">
+        <%= form.collection_check_boxes :visit_type_ids, VisitType.order(:name), :id, :name %>
+      </div>
+    <% else %>
+      <p>訪問タイプが登録されていません。<%= link_to "訪問タイプ管理", visit_types_path %>から登録してください。</p>
+    <% end %>
+  </div>
+
   <!-- メモ（大きく） -->
   <div>
     <%= form.label :memo, "メモ", style: "display: block" %>
