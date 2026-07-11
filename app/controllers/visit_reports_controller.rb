@@ -12,6 +12,7 @@ class VisitReportsController < ApplicationController
   def show
     @visit_report = VisitReport.find(params[:id])
     authorize @visit_report
+    @comment = Comment.new(visit_report: @visit_report)
   end
 
   def new

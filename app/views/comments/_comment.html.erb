@@ -1,0 +1,11 @@
+<div class="comment">
+  <div class="comment-meta">
+    <strong><%= comment.user.name %></strong>
+    <span class="comment-role">（<%= comment.user.role_label %>）</span>
+    <span class="comment-time"><%= l(comment.created_at, format: :short) %></span>
+  </div>
+  <p class="comment-body"><%= simple_format(comment.body) %></p>
+  <% if policy(comment).destroy? %>
+    <%= button_to "削除", visit_report_comment_path(comment.visit_report, comment), method: :delete, data: { confirm: "このコメントを削除しますか？" }, class: "btn btn-delete" %>
+  <% end %>
+</div>

@@ -2,6 +2,7 @@ class VisitReport < ApplicationRecord
   belongs_to :care_recipient
   belongs_to :visit_type
   belongs_to :user
+  has_many :comments, dependent: :destroy
 
   enum status: { planned: 0, completed: 1, missed: 2 }
 

@@ -29,7 +29,9 @@ Rails.application.routes.draw do
     resources :personal_schedules, except: [:index, :show]
   end
 
-  resources :visit_reports
+  resources :visit_reports do
+    resources :comments, only: [:create, :destroy]
+  end
   resources :visit_types, except: [:show]
   resources :users, only: [:index, :edit, :update]
 end

@@ -1,6 +1,6 @@
 <h2>訪問記録の詳細</h2>
 
-<%= render partial: "details", locals: { report: @visit_report } %>
+<%= render partial: "visit_reports/details", locals: { report: @visit_report } %>
 
 <div>
   <% if policy(@visit_report).update? %>
@@ -12,4 +12,37 @@
   <% end %>
 
   <%= link_to "カレンダーに戻る", calendar_care_recipient_path(@visit_report.care_recipient), class: "btn btn-show" %>
+</div>
+
+<div class="panel comments-panel">
+  <h3>連絡帳（コメント）</h3>
+
+  <div class="comment-list">
+    <% if @visit_report.comments.any? %>
+      <%= render partial: "comments/comment", collection: @visit_report.comments, as: :comment %>
+    <% else %>
+      <p class="text-muted">まだコメントはありません。</p>
+    <% end %>
+  </div>
+
+  <% if policy(@comment).create? %>
+    <%= form_with model: [@visit_report, @comment], local: true do |f| %>
+      <% if @comment.errors.any? %>
+        <div class="alert alert-danger">
+          <ul>
+            <% @comment.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="mb-3">
+        <%= f.label :body, "コメントを書く" %>
+        <%= f.text_area :body, class: "form-control", rows: 3 %>
+      </div>
+
+      <%= f.submit "投稿", class: "btn btn-primary" %>
+    <% end %>
+  <% end %>
 </div>

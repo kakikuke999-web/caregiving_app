@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_07_11_203751) do
+ActiveRecord::Schema[7.1].define(version: 2026_07_11_205717) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -79,6 +79,16 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_11_203751) do
     t.string "primary_doctor"
     t.string "primary_hospital"
     t.text "regular_medications"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.bigint "visit_report_id", null: false
+    t.bigint "user_id", null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_comments_on_user_id"
+    t.index ["visit_report_id"], name: "index_comments_on_visit_report_id"
   end
 
   create_table "emergency_contacts", force: :cascade do |t|
@@ -185,6 +195,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_11_203751) do
   add_foreign_key "adl_records", "users", column: "recorded_by_id"
   add_foreign_key "care_recipient_visit_types", "care_recipients"
   add_foreign_key "care_recipient_visit_types", "visit_types"
+  add_foreign_key "comments", "users"
+  add_foreign_key "comments", "visit_reports"
   add_foreign_key "emergency_contacts", "care_recipients"
   add_foreign_key "family_memberships", "care_recipients"
   add_foreign_key "family_memberships", "users"
