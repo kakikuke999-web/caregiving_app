@@ -1,0 +1,53 @@
+<h2><%= @care_recipient.name %>さんの書類</h2>
+
+<p><%= link_to "対象者ページに戻る", @care_recipient %></p>
+
+<% if policy(@care_recipient.care_documents.new).create? %>
+  <%= link_to "新規登録", new_care_recipient_care_document_path(@care_recipient), class: "btn btn-primary mb-3" %>
+<% end %>
+
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>種類</th>
+        <th>タイトル</th>
+        <th>発行元</th>
+        <th>作成日</th>
+        <th>有効期間</th>
+        <th>ファイル</th>
+        <th>登録者</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @care_documents.each do |care_document| %>
+        <tr>
+          <td><%= care_document.label %></td>
+          <td><%= care_document.title %></td>
+          <td><%= care_document.issuing_organization %></td>
+          <td><%= care_document.issued_on %></td>
+          <td>
+            <% if care_document.valid_from || care_document.valid_until %>
+              <%= care_document.valid_from %> 〜 <%= care_document.valid_until %>
+            <% end %>
+          </td>
+          <td>
+            <% if care_document.file.attached? %>
+              <%= link_to "ダウンロード", url_for(care_document.file) %>
+            <% end %>
+          </td>
+          <td><%= care_document.uploaded_by.name %></td>
+          <td>
+            <% if policy(care_document).update? %>
+              <%= link_to "編集", edit_care_recipient_care_document_path(@care_recipient, care_document) %>
+            <% end %>
+            <% if policy(care_document).destroy? %>
+              <%= button_to "削除", care_recipient_care_document_path(@care_recipient, care_document), method: :delete, data: { confirm: "削除しますか？" }, class: "btn btn-delete" %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

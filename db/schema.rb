@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_07_11_221911) do
+ActiveRecord::Schema[7.1].define(version: 2026_07_11_233249) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,6 +64,22 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_11_221911) do
     t.integer "dinner_side"
     t.index ["care_recipient_id"], name: "index_adl_records_on_care_recipient_id"
     t.index ["recorded_by_id"], name: "index_adl_records_on_recorded_by_id"
+  end
+
+  create_table "care_documents", force: :cascade do |t|
+    t.bigint "care_recipient_id", null: false
+    t.bigint "uploaded_by_id", null: false
+    t.string "document_type", null: false
+    t.string "title"
+    t.string "issuing_organization"
+    t.date "issued_on"
+    t.date "valid_from"
+    t.date "valid_until"
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["care_recipient_id"], name: "index_care_documents_on_care_recipient_id"
+    t.index ["uploaded_by_id"], name: "index_care_documents_on_uploaded_by_id"
   end
 
   create_table "care_recipient_visit_types", force: :cascade do |t|
@@ -203,6 +219,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_11_221911) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "adl_records", "care_recipients"
   add_foreign_key "adl_records", "users", column: "recorded_by_id"
+  add_foreign_key "care_documents", "care_recipients"
+  add_foreign_key "care_documents", "users", column: "uploaded_by_id"
   add_foreign_key "care_recipient_visit_types", "care_recipients"
   add_foreign_key "care_recipient_visit_types", "visit_types"
   add_foreign_key "comments", "users"

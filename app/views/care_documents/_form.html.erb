@@ -1,0 +1,54 @@
+<%= form_with model: [care_recipient, care_document], local: true do |f| %>
+  <% if care_document.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= care_document.errors.count %>件のエラーにより保存できませんでした:</h2>
+      <ul>
+        <% care_document.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :document_type, "書類の種類" %>
+    <%= f.select :document_type, CareDocument::TYPES.map { |t| [CareDocument::LABELS[t], t] }, { prompt: "選択してください" }, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :title, "タイトル" %>
+    <%= f.text_field :title, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :issuing_organization, "発行元（病院・事業所名など）" %>
+    <%= f.text_field :issuing_organization, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :issued_on, "作成日" %>
+    <%= f.date_field :issued_on, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :valid_from, "有効期間（開始）" %>
+    <%= f.date_field :valid_from, class: "form-control" %>
+    <%= f.label :valid_until, "有効期間（終了）" %>
+    <%= f.date_field :valid_until, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :note, "メモ" %>
+    <%= f.text_area :note, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :file, "ファイル（PDF・画像）" %>
+    <%= f.file_field :file, class: "form-control" %>
+    <% if care_document.file.attached? %>
+      <p>現在のファイル: <%= link_to care_document.file.filename, url_for(care_document.file) %>（新しいファイルを選ぶと差し替わります）</p>
+    <% end %>
+  </div>
+
+  <%= f.submit "保存", class: "btn btn-primary" %>
+<% end %>

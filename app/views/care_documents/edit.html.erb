@@ -1,0 +1,7 @@
+<h2><%= @care_recipient.name %>さんの書類 - 編集</h2>
+
+<div class="panel">
+  <%= render "form", care_recipient: @care_recipient, care_document: @care_document %>
+</div>
+
+<%= link_to "一覧に戻る", care_recipient_care_documents_path(@care_recipient) %>

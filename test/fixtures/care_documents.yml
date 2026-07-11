@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  care_recipient: one
+  uploaded_by: one
+  document_type: care_plan
+  title: 居宅サービス計画書
+  issuing_organization: MyString
+  issued_on: 2026-07-12
+  valid_from: 2026-07-12
+  valid_until: 2027-07-12
+  note: MyText
+
+two:
+  care_recipient: two
+  uploaded_by: two
+  document_type: rehab_plan
+  title: リハビリテーション実施計画書
+  issuing_organization: MyString
+  issued_on: 2026-07-12
+  valid_from: 2026-07-12
+  valid_until: 2027-07-12
+  note: MyText

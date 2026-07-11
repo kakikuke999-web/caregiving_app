@@ -13,6 +13,7 @@ class CareRecipient < ApplicationRecord
     has_many :personal_schedules, dependent: :destroy
     has_many :care_recipient_visit_types, dependent: :destroy
     has_many :visit_types, through: :care_recipient_visit_types
+    has_many :care_documents, dependent: :destroy
 
 
     def age
