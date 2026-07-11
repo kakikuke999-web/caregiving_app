@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_07_11_205717) do
+ActiveRecord::Schema[7.1].define(version: 2026_07_11_221911) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,6 +52,16 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_11_205717) do
     t.text "note"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "bathed"
+    t.boolean "medication_taken"
+    t.integer "urination_count"
+    t.boolean "bowel_movement"
+    t.integer "breakfast_staple"
+    t.integer "breakfast_side"
+    t.integer "lunch_staple"
+    t.integer "lunch_side"
+    t.integer "dinner_staple"
+    t.integer "dinner_side"
     t.index ["care_recipient_id"], name: "index_adl_records_on_care_recipient_id"
     t.index ["recorded_by_id"], name: "index_adl_records_on_recorded_by_id"
   end

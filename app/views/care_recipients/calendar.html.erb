@@ -15,6 +15,10 @@
     <p><%= link_to "本人の予定を追加", new_care_recipient_personal_schedule_path(@care_recipient), class: "btn btn-show" %></p>
   <% end %>
 
+  <% if current_user.admin? || current_user.care_manager? || current_user.staff? %>
+    <p><%= link_to "日誌を記録", new_care_recipient_daily_report_path(@care_recipient), class: "btn btn-show" %></p>
+  <% end %>
+
   <div id="calendar" data-care-recipient-id="<%= @care_recipient.id %>"
        data-can-manage-visits="<%= can_manage_visits %>"
        data-can-manage-schedules="<%= can_manage_schedules %>"></div>

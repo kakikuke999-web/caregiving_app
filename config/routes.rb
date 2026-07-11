@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     resources :medication_records
     resources :emergency_contacts, except: [:index, :show]
     resources :personal_schedules, except: [:index, :show]
+    resources :daily_reports, only: [:new, :create]
   end
 
   resources :visit_reports do

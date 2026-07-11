@@ -55,6 +55,10 @@ class AdlRecordsController < ApplicationController
   end
 
   def adl_record_params
-    params.require(:adl_record).permit(:recorded_at, :meal_intake, :excretion_status, :sleep_quality, :note)
+    params.require(:adl_record).permit(
+      :recorded_at, :meal_intake, :excretion_status, :sleep_quality, :note,
+      :bathed, :medication_taken, :urination_count, :bowel_movement,
+      :breakfast_staple, :breakfast_side, :lunch_staple, :lunch_side, :dinner_staple, :dinner_side
+    )
   end
 end

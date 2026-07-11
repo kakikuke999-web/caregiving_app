@@ -21,3 +21,30 @@ if (admin_email = ENV["ADMIN_EMAIL"]).present?
     puts "ADMIN_EMAIL set to #{admin_email.inspect} but no matching user was found"
   end
 end
+
+VisitType.find_or_create_by!(name: "デイサービス")
+
+# 過去のデイサービス日誌（紙の記録）を登録する際、記入者として名前だけ分かって
+# いたスタッフの仮アカウント。パスワードは起動のたびにランダム生成し、初回作成時
+# のみログに出力する（ログにしか残らず、リポジトリには一切保存されない）。
+# 本人が使う前にオーナーがパスワードを再設定・案内すること。
+[
+  ["staff_higuchi@example.com", "樋口"],
+  ["staff_arisa@example.com", "ありさ"],
+  ["staff_honda@example.com", "本田"],
+  ["staff_ueno@example.com", "上野"],
+  ["staff_ito@example.com", "伊藤"],
+  ["staff_yamazawa@example.com", "山澤"]
+].each do |email, name|
+  next if User.exists?(email: email)
+
+  temp_password = SecureRandom.alphanumeric(20)
+  User.create!(
+    email: email,
+    name: name,
+    role: :staff,
+    password: temp_password,
+    password_confirmation: temp_password
+  )
+  puts "Created staff account #{email} (#{name}) with temporary password: #{temp_password} (change it before handing off to the real staff member)"
+end
