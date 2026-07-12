@@ -1,0 +1,30 @@
+<h2><%= @care_recipient.name %>さんの日誌 - 一括インポート</h2>
+
+<p>紙の日誌など、複数件のデータをまとめてJSON形式で貼り付けて登録します。同じ日時の訪問記録がすでにある場合は自動的にスキップされるので、複数回実行しても重複しません。</p>
+
+<% if @result %>
+  <div class="panel">
+    <p>登録: <%= @result.created %>件 / スキップ: <%= @result.skipped %>件</p>
+    <% if @result.errors.any? %>
+      <div class="alert alert-danger">
+        <ul>
+          <% @result.errors.each do |error| %>
+            <li><%= error %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="panel">
+  <%= form_with url: care_recipient_daily_report_imports_path(@care_recipient), method: :post, local: true do |f| %>
+    <div class="mb-3">
+      <%= label_tag :json, "JSONデータ" %>
+      <%= text_area_tag :json, params[:json], rows: 20, class: "form-control", placeholder: '[{"date": "2026-01-01", "temperature": 36.5, "blood_pressures": [[120, 80]], "pulses": [70], "lunch_staple": 10, "lunch_side": 10, "bathed": true, "medication_taken": true, "urination_count": 2, "bowel_movement": true, "recorder_email": null, "notes": "サンプルの内容です"}]' %>
+    </div>
+    <%= f.submit "インポート", class: "btn btn-primary" %>
+  <% end %>
+</div>
+
+<%= link_to "対象者ページに戻る", @care_recipient %>
