@@ -1,7 +1,7 @@
 <div class="visit-report-details">
   <p><strong>対象者:</strong> <%= report.care_recipient.name %></p>
   <p><strong>訪問タイプ:</strong> <%= report.visit_type&.name %></p>
-  <p><strong>担当者:</strong> <%= report.user.name %></p>
+  <p><strong>担当者:</strong> <%= report.assignee_label %></p>
   <p><strong>訪問日時:</strong> <%= report.time_range_label %></p>
   <p><strong>ステータス:</strong> <%= VisitReportsController::STATUS_LABELS[report.status] %></p>
   <p><strong>内容:</strong> <%= simple_format(report.notes) %></p>

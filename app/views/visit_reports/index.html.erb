@@ -17,7 +17,7 @@
       <% @visit_reports.each do |report| %>
         <tr>
           <td><%= report.visited_at.strftime("%Y年%m月%d日 %H:%M") %></td>
-          <td><%= report.user.email %></td>
+          <td><%= report.assignee_label %></td>
           <td><%= simple_format(report.notes) %></td>
         </tr>
       <% end %>

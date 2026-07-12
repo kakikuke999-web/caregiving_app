@@ -23,8 +23,13 @@
   </div>
 
   <div class="mb-3">
-    <%= f.label :user_id, "担当者" %>
+    <%= f.label :user_id, "担当者（自社スタッフ）" %>
     <%= f.collection_select :user_id, User.assignable_to_visits.order(:name), :id, :name, prompt: "選択してください", class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :provider_name, "提供事業者（自社スタッフでない場合）" %>
+    <%= f.text_field :provider_name, class: "form-control", placeholder: "例: ふれんず訪問看護ステーション" %>
   </div>
 
   <div class="mb-3">

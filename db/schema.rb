@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_07_11_233249) do
+ActiveRecord::Schema[7.1].define(version: 2026_07_12_211818) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -165,6 +165,24 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_11_233249) do
     t.index ["created_by_id"], name: "index_personal_schedules_on_created_by_id"
   end
 
+  create_table "recurring_schedules", force: :cascade do |t|
+    t.bigint "care_recipient_id", null: false
+    t.bigint "visit_type_id", null: false
+    t.bigint "user_id"
+    t.bigint "created_by_id", null: false
+    t.integer "day_of_week", null: false
+    t.time "start_time", null: false
+    t.time "end_time"
+    t.string "provider_name"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["care_recipient_id"], name: "index_recurring_schedules_on_care_recipient_id"
+    t.index ["created_by_id"], name: "index_recurring_schedules_on_created_by_id"
+    t.index ["user_id"], name: "index_recurring_schedules_on_user_id"
+    t.index ["visit_type_id"], name: "index_recurring_schedules_on_visit_type_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -181,7 +199,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_11_233249) do
 
   create_table "visit_reports", force: :cascade do |t|
     t.bigint "care_recipient_id", null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.text "notes"
     t.datetime "visited_at"
     t.datetime "created_at", null: false
@@ -189,7 +207,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_11_233249) do
     t.bigint "visit_type_id"
     t.integer "status", default: 0, null: false
     t.datetime "ended_at"
+    t.string "provider_name"
+    t.bigint "recurring_schedule_id"
     t.index ["care_recipient_id"], name: "index_visit_reports_on_care_recipient_id"
+    t.index ["recurring_schedule_id"], name: "index_visit_reports_on_recurring_schedule_id"
     t.index ["user_id"], name: "index_visit_reports_on_user_id"
     t.index ["visit_type_id"], name: "index_visit_reports_on_visit_type_id"
   end
@@ -232,7 +253,12 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_11_233249) do
   add_foreign_key "medication_records", "users", column: "recorded_by_id"
   add_foreign_key "personal_schedules", "care_recipients"
   add_foreign_key "personal_schedules", "users", column: "created_by_id"
+  add_foreign_key "recurring_schedules", "care_recipients"
+  add_foreign_key "recurring_schedules", "users"
+  add_foreign_key "recurring_schedules", "users", column: "created_by_id"
+  add_foreign_key "recurring_schedules", "visit_types"
   add_foreign_key "visit_reports", "care_recipients"
+  add_foreign_key "visit_reports", "recurring_schedules"
   add_foreign_key "visit_reports", "users"
   add_foreign_key "visit_reports", "visit_types"
   add_foreign_key "vitals", "care_recipients"

@@ -94,7 +94,7 @@ class VisitReportsController < ApplicationController
   private
 
   def visit_report_params
-    params.require(:visit_report).permit(:care_recipient_id, :visited_at, :ended_at, :user_id, :visit_type_id, :notes, :status)
+    params.require(:visit_report).permit(:care_recipient_id, :visited_at, :ended_at, :user_id, :visit_type_id, :notes, :status, :provider_name)
   end
 
   def available_visit_types_for(care_recipient)
@@ -106,7 +106,7 @@ class VisitReportsController < ApplicationController
 
   def event_json(report, include_recipient_name: false)
     visit_type_name = report.visit_type&.name || "未分類"
-    title = include_recipient_name ? "#{report.care_recipient.name}: #{visit_type_name}（#{report.user.name}）" : "#{visit_type_name}（#{report.user.name}）"
+    title = include_recipient_name ? "#{report.care_recipient.name}: #{visit_type_name}（#{report.assignee_label}）" : "#{visit_type_name}（#{report.assignee_label}）"
 
     {
       title: title,
@@ -115,7 +115,7 @@ class VisitReportsController < ApplicationController
       color: STATUS_COLORS[report.status],
       extendedProps: {
         id: report.id,
-        staff_name: report.user.name,
+        staff_name: report.assignee_label,
         visit_type: visit_type_name,
         details: report.notes,
         status: report.status,

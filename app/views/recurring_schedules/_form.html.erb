@@ -1,0 +1,56 @@
+<%= form_with model: [care_recipient, recurring_schedule], local: true do |f| %>
+  <% if recurring_schedule.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= recurring_schedule.errors.count %>件のエラーにより保存できませんでした:</h2>
+      <ul>
+        <% recurring_schedule.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :day_of_week, "曜日" %>
+    <%= f.select :day_of_week, RecurringSchedule::DAY_NAMES.each_with_index.map { |name, i| [name, i] }, {}, class: "form-select" %>
+  </div>
+
+  <div class="field-row">
+    <div class="field-col">
+      <%= f.label :start_time, "開始時刻" %>
+      <%= f.time_field :start_time, class: "form-control" %>
+    </div>
+    <div class="field-col">
+      <%= f.label :end_time, "終了時刻" %>
+      <%= f.time_field :end_time, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :visit_type_id, "訪問タイプ" %>
+    <%= f.collection_select :visit_type_id, VisitType.order(:name), :id, :name, prompt: "選択してください", class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :user_id, "担当者（自社スタッフ）" %>
+    <%= f.collection_select :user_id, User.assignable_to_visits.order(:name), :id, :name, include_blank: "（自社スタッフ以外）", class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :provider_name, "提供事業者（自社スタッフでない場合）" %>
+    <%= f.text_field :provider_name, class: "form-control", placeholder: "例: ふれんず訪問看護ステーション" %>
+  </div>
+
+  <div class="toggle-group">
+    <span class="toggle-label">状態</span>
+    <label class="toggle-option"><%= f.radio_button :active, true %> 有効</label>
+    <label class="toggle-option"><%= f.radio_button :active, false %> 停止中</label>
+  </div>
+
+  <%= f.submit "保存", class: "btn btn-primary" %>
+<% end %>
+
+<% if recurring_schedule.persisted? && policy(recurring_schedule).destroy? %>
+  <%= button_to "削除", [care_recipient, recurring_schedule], method: :delete,
+        data: { confirm: "この定期予定を削除しますか？（生成済みの訪問予定は残ります）" }, class: "btn btn-delete" %>
+<% end %>

@@ -1,0 +1,22 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  care_recipient: one
+  visit_type: one
+  user: staff_one
+  created_by: one
+  day_of_week: 1
+  start_time: 2000-01-01 10:00:00
+  end_time: 2000-01-01 15:00:00
+  active: false
+
+two:
+  care_recipient: two
+  visit_type: two
+  user:
+  created_by: one
+  day_of_week: 3
+  start_time: 2000-01-01 09:00:00
+  end_time:
+  provider_name: ふれんず訪問看護ステーション
+  active: false

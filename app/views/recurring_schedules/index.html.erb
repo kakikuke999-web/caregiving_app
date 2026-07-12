@@ -1,0 +1,48 @@
+<h2><%= @care_recipient.name %>さんの定期予定</h2>
+
+<p><%= link_to "対象者ページに戻る", @care_recipient %></p>
+
+<% if policy(RecurringSchedule.new(care_recipient: @care_recipient)).create? %>
+  <p>
+    <%= link_to "新規登録", new_care_recipient_recurring_schedule_path(@care_recipient), class: "btn btn-primary" %>
+    <%= button_to "今後8週間分を訪問予定に反映", generate_care_recipient_recurring_schedules_path(@care_recipient), method: :post, class: "btn btn-show" %>
+  </p>
+<% end %>
+
+<% if @recurring_schedules.any? %>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>曜日</th>
+          <th>時間</th>
+          <th>訪問タイプ</th>
+          <th>担当</th>
+          <th>状態</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @recurring_schedules.each do |recurring_schedule| %>
+          <tr>
+            <td><%= recurring_schedule.day_name %></td>
+            <td><%= recurring_schedule.time_range_label %></td>
+            <td><%= recurring_schedule.visit_type.name %></td>
+            <td><%= recurring_schedule.assignee_label %></td>
+            <td><%= recurring_schedule.active? ? "有効" : "停止中" %></td>
+            <td>
+              <% if policy(recurring_schedule).update? %>
+                <%= link_to "編集", edit_care_recipient_recurring_schedule_path(@care_recipient, recurring_schedule) %>
+              <% end %>
+              <% if policy(recurring_schedule).destroy? %>
+                <%= button_to "削除", care_recipient_recurring_schedule_path(@care_recipient, recurring_schedule), method: :delete, data: { confirm: "削除しますか？（生成済みの訪問予定は残ります）" }, class: "btn btn-delete" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-muted">登録された定期予定はありません</p>
+<% end %>
