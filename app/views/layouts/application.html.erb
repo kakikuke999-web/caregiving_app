@@ -33,23 +33,32 @@
 
   <body>
     <header class="app-header">
-      <%= link_to root_path, class: "app-brand" do %>
-        <span class="app-brand-mark">C</span>
-        <span>ケアギビング</span>
-      <% end %>
+      <div class="app-header-bar">
+        <%= link_to root_path, class: "app-brand" do %>
+          <span class="app-brand-mark">C</span>
+          <span>ケアギビング</span>
+        <% end %>
+
+        <% if user_signed_in? %>
+          <label for="nav-toggle" class="nav-toggle-btn" aria-label="メニューを開く">☰</label>
+        <% end %>
+      </div>
 
       <% if user_signed_in? %>
-        <nav class="app-nav">
-          <%= link_to "ホーム", root_path %>
-          <% if current_user.admin? || current_user.care_manager? %>
-            <%= link_to "ダッシュボード", dashboard_path %>
-            <%= link_to "全対象者カレンダー", calendar_path %>
-          <% end %>
-        </nav>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle-checkbox">
+        <div class="app-header-menu">
+          <nav class="app-nav">
+            <%= link_to "ホーム", root_path %>
+            <% if current_user.admin? || current_user.care_manager? %>
+              <%= link_to "ダッシュボード", dashboard_path %>
+              <%= link_to "全対象者カレンダー", calendar_path %>
+            <% end %>
+          </nav>
 
-        <div class="user-bar">
-          <span class="user-chip"><%= current_user.email %>（<%= current_user.role_label %>）</span>
-          <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "btn btn-edit" %>
+          <div class="user-bar">
+            <span class="user-chip"><%= current_user.email %>（<%= current_user.role_label %>）</span>
+            <%= button_to "ログアウト", destroy_user_session_path, method: :delete, class: "btn btn-edit" %>
+          </div>
         </div>
       <% end %>
     </header>

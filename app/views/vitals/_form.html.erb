@@ -20,11 +20,15 @@
     <%= f.number_field :value, step: "0.1", class: "form-control" %>
   </div>
 
-  <div class="mb-3" id="vital-bp-fields">
-    <%= f.label :systolic, "収縮期(上)" %>
-    <%= f.number_field :systolic, class: "form-control" %>
-    <%= f.label :diastolic, "拡張期(下)" %>
-    <%= f.number_field :diastolic, class: "form-control" %>
+  <div class="field-row" id="vital-bp-fields">
+    <div class="field-col">
+      <%= f.label :systolic, "収縮期(上)" %>
+      <%= f.number_field :systolic, class: "form-control" %>
+    </div>
+    <div class="field-col">
+      <%= f.label :diastolic, "拡張期(下)" %>
+      <%= f.number_field :diastolic, class: "form-control" %>
+    </div>
   </div>
 
   <div class="mb-3">
@@ -50,7 +54,7 @@
     function toggle() {
       const isBp = select.value === 'blood_pressure';
       valueField.style.display = isBp ? 'none' : 'block';
-      bpFields.style.display = isBp ? 'block' : 'none';
+      bpFields.style.display = isBp ? 'flex' : 'none';
     }
 
     select.addEventListener('change', toggle);

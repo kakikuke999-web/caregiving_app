@@ -1,12 +1,14 @@
 <div class="care-recipient-basic panel">
   <% if @care_recipient.photo.attached? %>
-    <%= image_tag @care_recipient.photo.variant(resize_to_fill: [150, 150]), class: "care-photo" %>
+    <%= image_tag @care_recipient.photo.variant(resize_to_fill: [150, 150]), class: "care-photo", alt: @care_recipient.name %>
+  <% else %>
+    <div class="care-photo care-photo-placeholder" aria-hidden="true"><%= @care_recipient.name.to_s.first %></div>
   <% end %>
 
   <h2><%= @care_recipient.name %></h2>
   <p><strong>生年月日:</strong> <%= @care_recipient.birthday %>(<%= @care_recipient.age %>歳)</p>
   <p><strong>住所:</strong> <%= @care_recipient.address %></p>
-  <p><strong>介護度:</strong> <%= @care_recipient.care_level %></p>
+  <p><strong>介護度:</strong> <%= value_or_unset(@care_recipient.care_level) %></p>
 
   <div class="actions">
     <%= link_to "編集", edit_care_recipient_path(@care_recipient), class: "btn btn-edit" %>
@@ -17,12 +19,12 @@
 
 <div class="medical-info panel">
   <h3>医療・介護情報</h3>
-  <p><strong>かかりつけ医:</strong> <%= @care_recipient.primary_doctor %></p>
-  <p><strong>かかりつけ医療機関:</strong> <%= @care_recipient.primary_hospital %></p>
-  <p><strong>既往歴:</strong> <%= @care_recipient.medical_history %></p>
-  <p><strong>現在服用中の薬:</strong> <%= @care_recipient.regular_medications %></p>
-  <p><strong>アレルギー:</strong> <%= @care_recipient.allergies %></p>
-  <p><strong>メモ:</strong> <%= @care_recipient.memo %></p>
+  <p><strong>かかりつけ医:</strong> <%= value_or_unset(@care_recipient.primary_doctor) %></p>
+  <p><strong>かかりつけ医療機関:</strong> <%= value_or_unset(@care_recipient.primary_hospital) %></p>
+  <p><strong>既往歴:</strong> <%= value_or_unset(@care_recipient.medical_history) %></p>
+  <p><strong>現在服用中の薬:</strong> <%= value_or_unset(@care_recipient.regular_medications) %></p>
+  <p><strong>アレルギー:</strong> <%= value_or_unset(@care_recipient.allergies) %></p>
+  <p><strong>メモ:</strong> <%= value_or_unset(@care_recipient.memo) %></p>
 </div>
 
 <div class="emergency-contacts panel">

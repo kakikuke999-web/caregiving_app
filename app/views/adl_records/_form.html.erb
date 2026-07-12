@@ -36,46 +36,60 @@
   </div>
 
   <h3>食事摂取量（10段階）</h3>
-  <div class="mb-3">
-    <%= f.label :breakfast_staple, "朝食：主食" %>
-    <%= f.number_field :breakfast_staple, min: 0, max: 10, class: "form-control" %>
-    <%= f.label :breakfast_side, "朝食：副食" %>
-    <%= f.number_field :breakfast_side, min: 0, max: 10, class: "form-control" %>
+  <div class="field-row">
+    <div class="field-col">
+      <%= f.label :breakfast_staple, "朝食：主食" %>
+      <%= f.number_field :breakfast_staple, min: 0, max: 10, class: "form-control" %>
+    </div>
+    <div class="field-col">
+      <%= f.label :breakfast_side, "朝食：副食" %>
+      <%= f.number_field :breakfast_side, min: 0, max: 10, class: "form-control" %>
+    </div>
   </div>
-  <div class="mb-3">
-    <%= f.label :lunch_staple, "昼食：主食" %>
-    <%= f.number_field :lunch_staple, min: 0, max: 10, class: "form-control" %>
-    <%= f.label :lunch_side, "昼食：副食" %>
-    <%= f.number_field :lunch_side, min: 0, max: 10, class: "form-control" %>
+  <div class="field-row">
+    <div class="field-col">
+      <%= f.label :lunch_staple, "昼食：主食" %>
+      <%= f.number_field :lunch_staple, min: 0, max: 10, class: "form-control" %>
+    </div>
+    <div class="field-col">
+      <%= f.label :lunch_side, "昼食：副食" %>
+      <%= f.number_field :lunch_side, min: 0, max: 10, class: "form-control" %>
+    </div>
   </div>
-  <div class="mb-3">
-    <%= f.label :dinner_staple, "夕食：主食" %>
-    <%= f.number_field :dinner_staple, min: 0, max: 10, class: "form-control" %>
-    <%= f.label :dinner_side, "夕食：副食" %>
-    <%= f.number_field :dinner_side, min: 0, max: 10, class: "form-control" %>
-  </div>
-
-  <div class="mb-3">
-    <span>入浴</span>
-    <label><%= f.radio_button :bathed, true %> 有</label>
-    <label><%= f.radio_button :bathed, false %> 無</label>
-  </div>
-
-  <div class="mb-3">
-    <span>服薬</span>
-    <label><%= f.radio_button :medication_taken, true %> 有</label>
-    <label><%= f.radio_button :medication_taken, false %> 無</label>
-  </div>
-
-  <div class="mb-3">
-    <%= f.label :urination_count, "排尿（回）" %>
-    <%= f.number_field :urination_count, min: 0, class: "form-control" %>
+  <div class="field-row">
+    <div class="field-col">
+      <%= f.label :dinner_staple, "夕食：主食" %>
+      <%= f.number_field :dinner_staple, min: 0, max: 10, class: "form-control" %>
+    </div>
+    <div class="field-col">
+      <%= f.label :dinner_side, "夕食：副食" %>
+      <%= f.number_field :dinner_side, min: 0, max: 10, class: "form-control" %>
+    </div>
   </div>
 
-  <div class="mb-3">
-    <span>排便</span>
-    <label><%= f.radio_button :bowel_movement, true %> 有</label>
-    <label><%= f.radio_button :bowel_movement, false %> 無</label>
+  <div class="toggle-group">
+    <span class="toggle-label">入浴</span>
+    <label class="toggle-option"><%= f.radio_button :bathed, true %> 有</label>
+    <label class="toggle-option"><%= f.radio_button :bathed, false %> 無</label>
+  </div>
+
+  <div class="toggle-group">
+    <span class="toggle-label">服薬</span>
+    <label class="toggle-option"><%= f.radio_button :medication_taken, true %> 有</label>
+    <label class="toggle-option"><%= f.radio_button :medication_taken, false %> 無</label>
+  </div>
+
+  <div class="field-row">
+    <div class="field-col">
+      <%= f.label :urination_count, "排尿（回）" %>
+      <%= f.number_field :urination_count, min: 0, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="toggle-group">
+    <span class="toggle-label">排便</span>
+    <label class="toggle-option"><%= f.radio_button :bowel_movement, true %> 有</label>
+    <label class="toggle-option"><%= f.radio_button :bowel_movement, false %> 無</label>
   </div>
 
   <%= f.submit "保存", class: "btn btn-primary" %>

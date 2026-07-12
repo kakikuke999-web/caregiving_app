@@ -18,50 +18,60 @@
     </div>
 
     <h3>本日の様子</h3>
-    <div class="mb-3">
-      <%= f.label :temperature, "体温（℃）" %>
-      <%= f.number_field :temperature, step: 0.1, class: "form-control" %>
-    </div>
-    <div class="mb-3">
-      <%= f.label :systolic, "血圧（上）" %>
-      <%= f.number_field :systolic, class: "form-control" %>
-      <%= f.label :diastolic, "血圧（下）" %>
-      <%= f.number_field :diastolic, class: "form-control" %>
-    </div>
-    <div class="mb-3">
-      <%= f.label :pulse, "脈" %>
-      <%= f.number_field :pulse, class: "form-control" %>
+    <div class="field-row">
+      <div class="field-col">
+        <%= f.label :temperature, "体温（℃）" %>
+        <%= f.number_field :temperature, step: 0.1, class: "form-control" %>
+      </div>
+      <div class="field-col">
+        <%= f.label :systolic, "血圧（上）" %>
+        <%= f.number_field :systolic, class: "form-control" %>
+      </div>
+      <div class="field-col">
+        <%= f.label :diastolic, "血圧（下）" %>
+        <%= f.number_field :diastolic, class: "form-control" %>
+      </div>
+      <div class="field-col">
+        <%= f.label :pulse, "脈" %>
+        <%= f.number_field :pulse, class: "form-control" %>
+      </div>
     </div>
 
     <h3>食事摂取量（昼食・10段階）</h3>
-    <div class="mb-3">
-      <%= f.label :lunch_staple, "主食" %>
-      <%= f.number_field :lunch_staple, min: 0, max: 10, class: "form-control" %>
-      <%= f.label :lunch_side, "副食" %>
-      <%= f.number_field :lunch_side, min: 0, max: 10, class: "form-control" %>
+    <div class="field-row">
+      <div class="field-col">
+        <%= f.label :lunch_staple, "主食" %>
+        <%= f.number_field :lunch_staple, min: 0, max: 10, class: "form-control" %>
+      </div>
+      <div class="field-col">
+        <%= f.label :lunch_side, "副食" %>
+        <%= f.number_field :lunch_side, min: 0, max: 10, class: "form-control" %>
+      </div>
     </div>
 
-    <div class="mb-3">
-      <span>入浴</span>
-      <label><%= f.radio_button :bathed, true %> 有</label>
-      <label><%= f.radio_button :bathed, false %> 無</label>
+    <div class="toggle-group">
+      <span class="toggle-label">入浴</span>
+      <label class="toggle-option"><%= f.radio_button :bathed, true %> 有</label>
+      <label class="toggle-option"><%= f.radio_button :bathed, false %> 無</label>
     </div>
 
-    <div class="mb-3">
-      <span>服薬</span>
-      <label><%= f.radio_button :medication_taken, true %> 有</label>
-      <label><%= f.radio_button :medication_taken, false %> 無</label>
+    <div class="toggle-group">
+      <span class="toggle-label">服薬</span>
+      <label class="toggle-option"><%= f.radio_button :medication_taken, true %> 有</label>
+      <label class="toggle-option"><%= f.radio_button :medication_taken, false %> 無</label>
     </div>
 
     <h3>排泄状況</h3>
-    <div class="mb-3">
-      <%= f.label :urination_count, "排尿（回）" %>
-      <%= f.number_field :urination_count, min: 0, class: "form-control" %>
+    <div class="field-row">
+      <div class="field-col">
+        <%= f.label :urination_count, "排尿（回）" %>
+        <%= f.number_field :urination_count, min: 0, class: "form-control" %>
+      </div>
     </div>
-    <div class="mb-3">
-      <span>排便</span>
-      <label><%= f.radio_button :bowel_movement, true %> 有</label>
-      <label><%= f.radio_button :bowel_movement, false %> 無</label>
+    <div class="toggle-group">
+      <span class="toggle-label">排便</span>
+      <label class="toggle-option"><%= f.radio_button :bowel_movement, true %> 有</label>
+      <label class="toggle-option"><%= f.radio_button :bowel_movement, false %> 無</label>
     </div>
 
     <div class="mb-3">

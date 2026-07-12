@@ -131,6 +131,65 @@ a {
   }
 }
 
+.app-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.app-header-menu {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.nav-toggle-checkbox {
+  display: none;
+}
+
+.nav-toggle-btn {
+  display: none;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  color: var(--ink-secondary);
+}
+
+/* スマホ幅ではハンバーガーボタンでナビ・ユーザー情報を折りたたむ
+   （折り返しで縦に伸びて窮屈だったため） */
+@media (max-width: 767px) {
+  .app-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nav-toggle-btn {
+    display: inline-flex;
+  }
+
+  .app-header-menu {
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .nav-toggle-checkbox:checked ~ .app-header-menu {
+    display: flex;
+  }
+
+  .app-nav {
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+
 .app-brand {
   display: flex;
   align-items: center;
@@ -158,7 +217,6 @@ a {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  flex: 1;
 }
 
 .app-nav a {
@@ -225,6 +283,25 @@ p.alert.flash {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
+  /* 横スクロールできる表の左右端にうっすら影を出し、隠れている列があることが
+     一目で分かるようにする（スマホで表が見切れているのに気付きにくかったため）。
+     background-attachment: local/scroll の組み合わせで、端まで達すると影が消える。 */
+  background-image:
+    linear-gradient(to right, var(--surface) 30%, rgba(255, 255, 255, 0)),
+    linear-gradient(to right, rgba(255, 255, 255, 0), var(--surface) 70%) 100% 0,
+    linear-gradient(to right, rgba(15, 23, 42, 0.12), rgba(255, 255, 255, 0)),
+    linear-gradient(to right, rgba(255, 255, 255, 0), rgba(15, 23, 42, 0.12)) 100% 0;
+  background-repeat: no-repeat;
+  background-size: 32px 100%, 32px 100%, 12px 100%, 12px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+@media (max-width: 767px) {
+  .table-responsive th,
+  .table-responsive td {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
 }
 
 .table-responsive table {
@@ -340,6 +417,21 @@ p.alert.flash {
   display: block;
   margin: 0 auto 10px;  /* 中央寄せ */
   border: 3px solid var(--border); /* ふちを付けると見栄えUP */
+}
+
+.care-photo-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.text-unset {
+  color: var(--ink-muted);
+  font-style: italic;
 }
 
 /* モーダル背景 */
@@ -473,6 +565,62 @@ p.alert.flash {
 
 .check-box-group input[type="checkbox"] {
   margin-right: 4px;
+}
+
+/* 体温・血圧・脈のような細い数値入力を横並びにまとめ、フォームを間延びさせない */
+.field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.field-row .field-col {
+  flex: 1 1 100px;
+  min-width: 100px;
+}
+
+.field-row .field-col label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* 有/無のような2択ラジオボタンをピル型のトグルとして見せる */
+.toggle-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.toggle-group .toggle-label {
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.toggle-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--ink-secondary);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.toggle-option input {
+  accent-color: var(--color-primary);
+}
+
+.toggle-option:has(input:checked) {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+  font-weight: 600;
 }
 
 #error_explanation {

@@ -30,11 +30,15 @@
     <%= f.date_field :issued_on, class: "form-control" %>
   </div>
 
-  <div class="mb-3">
-    <%= f.label :valid_from, "有効期間（開始）" %>
-    <%= f.date_field :valid_from, class: "form-control" %>
-    <%= f.label :valid_until, "有効期間（終了）" %>
-    <%= f.date_field :valid_until, class: "form-control" %>
+  <div class="field-row">
+    <div class="field-col">
+      <%= f.label :valid_from, "有効期間（開始）" %>
+      <%= f.date_field :valid_from, class: "form-control" %>
+    </div>
+    <div class="field-col">
+      <%= f.label :valid_until, "有効期間（終了）" %>
+      <%= f.date_field :valid_until, class: "form-control" %>
+    </div>
   </div>
 
   <div class="mb-3">
