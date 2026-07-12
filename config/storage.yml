@@ -6,6 +6,18 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
+# S3-compatible storage for production, configured entirely from ENV vars (set on Render, not
+# committed here) so it works with AWS S3, Cloudflare R2, Backblaze B2, or anything else that
+# speaks the S3 API. STORAGE_ENDPOINT/STORAGE_REGION are only needed for non-AWS providers.
+cloud:
+  service: S3
+  access_key_id: <%= ENV["STORAGE_ACCESS_KEY_ID"] %>
+  secret_access_key: <%= ENV["STORAGE_SECRET_ACCESS_KEY"] %>
+  region: <%= ENV.fetch("STORAGE_REGION", "auto") %>
+  bucket: <%= ENV["STORAGE_BUCKET"] %>
+  endpoint: <%= ENV["STORAGE_ENDPOINT"] %>
+  force_path_style: true
+
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
 #   service: S3

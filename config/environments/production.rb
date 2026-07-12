@@ -36,8 +36,11 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for Apache
   # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
-  # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  # Store uploaded files on the local file system by default (see config/storage.yml).
+  # Once STORAGE_BUCKET (and the other STORAGE_* env vars) are set on Render, this
+  # automatically switches to the S3-compatible :cloud service so uploads survive
+  # redeploys — no further code change or second deploy needed.
+  config.active_storage.service = ENV.key?("STORAGE_BUCKET") ? :cloud : :local
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil

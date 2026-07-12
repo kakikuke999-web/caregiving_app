@@ -16,6 +16,21 @@ services:
         fromDatabase:
           name: caregiving-app-db
           property: connectionString
+      # S3-compatible storage (e.g. Cloudflare R2) so uploaded files (photos, care
+      # documents) survive redeploys instead of living on the free web service's
+      # ephemeral disk. `sync: false` means Render won't store these values in this
+      # file — set them once in the Render dashboard's Environment tab. Leaving them
+      # unset keeps the app on local disk storage exactly as before (see production.rb).
+      - key: STORAGE_BUCKET
+        sync: false
+      - key: STORAGE_ACCESS_KEY_ID
+        sync: false
+      - key: STORAGE_SECRET_ACCESS_KEY
+        sync: false
+      - key: STORAGE_ENDPOINT
+        sync: false
+      - key: STORAGE_REGION
+        sync: false
 
 databases:
   - name: caregiving-app-db
