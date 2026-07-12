@@ -17,12 +17,12 @@
 
   <div class="mb-3">
     <%= f.label :started_at, "開始時刻" %>
-    <%= f.datetime_select :started_at, class: "form-control" %>
+    <%= f.datetime_field :started_at, class: "form-control" %>
   </div>
 
   <div class="mb-3">
     <%= f.label :ended_at, "終了時刻" %>
-    <%= f.datetime_select :ended_at, include_blank: true, class: "form-control" %>
+    <%= f.datetime_field :ended_at, class: "form-control" %>
   </div>
 
   <div class="mb-3">
