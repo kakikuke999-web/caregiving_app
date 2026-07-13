@@ -59,6 +59,10 @@
       plugins: [FullCalendar.DayGrid.default, FullCalendar.Interaction.default],
       initialView: 'dayGridMonth',
       locale: 'ja',
+      // config.time_zone is unset (=UTC) app-wide, so every stored/displayed timestamp is a literal
+      // wall-clock value already. FullCalendar's default timeZone:'local' would re-convert using the
+      // browser's zone (JST), shifting times by +9h and sometimes pushing long visits into the next day.
+      timeZone: 'UTC',
       eventSources: [
         `/care_recipients/${careRecipientId}/visit_events`,
         `/care_recipients/${careRecipientId}/personal_schedule_events`
