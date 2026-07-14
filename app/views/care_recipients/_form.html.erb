@@ -17,6 +17,18 @@
     <%= form.text_field :name, class: "form-control" %>
   </div>
 
+  <!-- フリガナ -->
+  <div>
+    <%= form.label :name_kana, "フリガナ", style: "display: block" %>
+    <%= form.text_field :name_kana, class: "form-control" %>
+  </div>
+
+  <!-- 性別 -->
+  <div>
+    <%= form.label :gender, "性別", style: "display: block" %>
+    <%= form.select :gender, CareRecipient::GENDERS.map { |g| [CareRecipient::GENDER_LABELS[g], g] }, prompt: "選択してください", class: "form-control" %>
+  </div>
+
   <!-- 生年月日 -->
   <div>
     <%= form.label :birthday, "生年月日", style: "display: block" %>
@@ -80,6 +92,22 @@
   <div>
     <%= form.label :primary_care_manager_id, "担当ケアマネージャー", style: "display: block" %>
     <%= form.collection_select :primary_care_manager_id, User.where(role: [:admin, :care_manager]).order(:name), :id, :name, { prompt: "選択してください" }, class: "form-control" %>
+  </div>
+
+  <!-- サービス利用票用の保険情報 -->
+  <div class="field-row">
+    <div class="field-col">
+      <%= form.label :insurer_number, "保険者番号", style: "display: block" %>
+      <%= form.text_field :insurer_number, class: "form-control" %>
+    </div>
+    <div class="field-col">
+      <%= form.label :insured_person_number, "被保険者番号", style: "display: block" %>
+      <%= form.text_field :insured_person_number, class: "form-control" %>
+    </div>
+    <div class="field-col">
+      <%= form.label :benefit_limit_units, "区分支給限度基準額(単位/月)", style: "display: block" %>
+      <%= form.number_field :benefit_limit_units, class: "form-control" %>
+    </div>
   </div>
 
   <!-- 利用する訪問タイプ -->

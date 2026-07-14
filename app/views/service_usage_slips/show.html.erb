@@ -1,0 +1,89 @@
+<% abbr_day_names = I18n.t("date.abbr_day_names") %>
+<% days = (@month..@month.end_of_month).to_a %>
+<% prev_month = @month - 1.month %>
+<% next_month = @month + 1.month %>
+
+<h2>サービス利用票 - <%= @care_recipient.name %>さん</h2>
+
+<p class="no-print">
+  <%= link_to "前月", care_recipient_service_usage_slip_path(@care_recipient, month: prev_month.strftime("%Y-%m")), class: "btn btn-secondary" %>
+  <strong><%= @month.strftime("%Y年%-m月") %></strong>
+  <%= link_to "次月", care_recipient_service_usage_slip_path(@care_recipient, month: next_month.strftime("%Y-%m")), class: "btn btn-secondary" %>
+  <button type="button" class="btn btn-show" onclick="window.print()">印刷 / PDFとして保存</button>
+  <%= link_to "対象者ページに戻る", @care_recipient, class: "btn btn-secondary" %>
+</p>
+
+<div class="panel service-usage-slip">
+  <table class="slip-header">
+    <tr>
+      <th>被保険者氏名</th>
+      <td><%= @care_recipient.name %><% if @care_recipient.name_kana.present? %>(<%= @care_recipient.name_kana %>)<% end %></td>
+      <th>性別</th>
+      <td><%= @care_recipient.gender_label %></td>
+    </tr>
+    <tr>
+      <th>生年月日</th>
+      <td><%= @care_recipient.birthday %></td>
+      <th>要介護状態区分</th>
+      <td><%= @care_recipient.care_level %></td>
+    </tr>
+    <tr>
+      <th>保険者番号</th>
+      <td><%= @care_recipient.insurer_number %></td>
+      <th>被保険者番号</th>
+      <td><%= @care_recipient.insured_person_number %></td>
+    </tr>
+    <tr>
+      <th>区分支給限度基準額</th>
+      <td><%= @care_recipient.benefit_limit_units %><% if @care_recipient.benefit_limit_units.present? %>単位/月<% end %></td>
+      <th>認定有効期間(〜)</th>
+      <td><%= @care_recipient.care_level_valid_until %></td>
+    </tr>
+  </table>
+
+  <% if @rows.empty? %>
+    <p class="text-unset">この月の訪問記録がありません。</p>
+  <% else %>
+    <div class="table-responsive">
+      <table class="slip-grid">
+        <thead>
+          <tr>
+            <th rowspan="2">サービス内容</th>
+            <th rowspan="2">担当</th>
+            <th rowspan="2"></th>
+            <% days.each do |d| %><th><%= d.day %></th><% end %>
+            <th rowspan="2">合計</th>
+          </tr>
+          <tr>
+            <% days.each do |d| %><th><%= abbr_day_names[d.wday] %></th><% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @rows.each do |row| %>
+            <tr>
+              <td rowspan="2">
+                <%= row.visit_type_name %>
+                <% if row.unit_count.present? %><br><span class="text-unset"><%= row.unit_count %>単位</span><% end %>
+              </td>
+              <td rowspan="2"><%= row.assignee %></td>
+              <td>予定</td>
+              <% days.each do |d| %>
+                <td><%= "1" if row.scheduled_days.include?(d.day) %></td>
+              <% end %>
+              <td><%= row.scheduled_days.size %></td>
+            </tr>
+            <tr>
+              <td>実績</td>
+              <% days.each do |d| %>
+                <td><%= "1" if row.completed_days.include?(d.day) %></td>
+              <% end %>
+              <td><%= row.completed_days.size %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+  <p class="text-unset">※ 単位数・加算項目・本アプリで管理していない外部事業者のサービス内容等は、別途ご確認の上ご記入ください。</p>
+</div>

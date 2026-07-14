@@ -64,6 +64,27 @@ class CareRecipientsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 6.months.from_now.to_date, @care_recipient.care_level_valid_until
   end
 
+  test "can set service-usage-slip header fields" do
+    patch care_recipient_url(@care_recipient), params: {
+      care_recipient: {
+        name: @care_recipient.name,
+        name_kana: "タナカ カズコ",
+        gender: "female",
+        insurer_number: "0749-21",
+        insured_person_number: "2666",
+        benefit_limit_units: 16765
+      }
+    }
+    assert_redirected_to care_recipient_url(@care_recipient)
+
+    @care_recipient.reload
+    assert_equal "タナカ カズコ", @care_recipient.name_kana
+    assert_equal "女性", @care_recipient.gender_label
+    assert_equal "0749-21", @care_recipient.insurer_number
+    assert_equal "2666", @care_recipient.insured_person_number
+    assert_equal 16765, @care_recipient.benefit_limit_units
+  end
+
   test "should destroy care_recipient" do
     assert_difference("CareRecipient.count", -1) do
       delete care_recipient_url(@care_recipient)

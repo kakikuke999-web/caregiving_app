@@ -31,6 +31,7 @@ Rails.application.routes.draw do
     resources :daily_report_imports, only: [:new, :create]
     resources :care_documents, except: [:show]
     resources :support_logs, except: [:show]
+    resource :service_usage_slip, only: [:show]
     resources :recurring_schedules, except: [:show] do
       post :generate, on: :collection
     end

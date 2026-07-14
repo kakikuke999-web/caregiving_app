@@ -81,6 +81,14 @@
   </div>
 <% end %>
 
+<% if ServiceUsageSlipPolicy.new(current_user, @care_recipient).show? %>
+  <div class="service-usage-slip-entry panel">
+    <h3>サービス利用票</h3>
+    <p>訪問記録から月間の予定・実績日別グリッドを作成し、印刷・PDF保存できます(家族には非公開)。</p>
+    <p><%= link_to "サービス利用票を見る", care_recipient_service_usage_slip_path(@care_recipient), class: "btn btn-show" %></p>
+  </div>
+<% end %>
+
 <div class="health-trends panel">
   <h3>健康推移</h3>
   <ul>

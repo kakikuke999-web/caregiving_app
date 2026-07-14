@@ -52,6 +52,6 @@ class VisitTypesController < ApplicationController
   end
 
   def visit_type_params
-    params.require(:visit_type).permit(:name)
+    params.require(:visit_type).permit(:name, :unit_count)
   end
 end

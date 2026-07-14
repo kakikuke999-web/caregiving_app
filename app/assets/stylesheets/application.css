@@ -898,3 +898,63 @@ p.alert.flash {
   margin: 0 0 8px;
   white-space: pre-wrap;
 }
+
+/* ==========================================================================
+   サービス利用票（月間日別グリッド）
+   ========================================================================== */
+
+.slip-header {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.slip-header th,
+.slip-header td {
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.slip-header th {
+  background: var(--surface-alt);
+  color: var(--ink-secondary);
+  white-space: nowrap;
+  width: 1%;
+}
+
+.slip-grid {
+  border-collapse: collapse;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.slip-grid th,
+.slip-grid td {
+  border: 1px solid var(--border);
+  padding: 3px 6px;
+  text-align: center;
+}
+
+.slip-grid td:nth-child(1),
+.slip-grid td:nth-child(2) {
+  text-align: left;
+  white-space: normal;
+}
+
+@media print {
+  .app-header,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: none;
+  }
+
+  .app-container {
+    max-width: none;
+    padding: 0;
+  }
+}

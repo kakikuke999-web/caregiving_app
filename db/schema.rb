@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_07_13_205314) do
+ActiveRecord::Schema[7.1].define(version: 2026_07_14_212352) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -107,6 +107,11 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_13_205314) do
     t.text "regular_medications"
     t.bigint "primary_care_manager_id"
     t.date "care_level_valid_until"
+    t.string "name_kana"
+    t.string "insurer_number"
+    t.string "insured_person_number"
+    t.integer "benefit_limit_units"
+    t.string "gender"
     t.index ["primary_care_manager_id"], name: "index_care_recipients_on_primary_care_manager_id"
   end
 
@@ -235,6 +240,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_13_205314) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "unit_count"
   end
 
   create_table "vitals", force: :cascade do |t|

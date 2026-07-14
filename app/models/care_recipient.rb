@@ -23,7 +23,19 @@ class CareRecipient < ApplicationRecord
 
     CERTIFICATION_WARNING_DAYS = 60
 
+    GENDERS = %w[male female].freeze
+
+    GENDER_LABELS = {
+      "male" => "男性",
+      "female" => "女性"
+    }.freeze
+
     validates :care_level, inclusion: { in: CARE_LEVELS }, allow_blank: true
+    validates :gender, inclusion: { in: GENDERS }, allow_blank: true
+
+    def gender_label
+      GENDER_LABELS[gender]
+    end
 
     def certification_expiring?
       return false unless care_level_valid_until.present?
