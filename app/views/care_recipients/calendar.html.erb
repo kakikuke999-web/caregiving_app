@@ -11,21 +11,28 @@
     <span class="status-dot" style="background: <%= PersonalSchedulesController::COLOR %>"></span>本人の予定
   </div>
 
-  <% if can_manage_schedules %>
-    <p><%= link_to "本人の予定を追加", new_care_recipient_personal_schedule_path(@care_recipient), class: "btn btn-show" %></p>
-  <% end %>
+  <div class="calendar-actions-wrap">
+    <input type="checkbox" id="calendar-actions-toggle" class="calendar-actions-toggle-checkbox">
+    <label for="calendar-actions-toggle" class="calendar-actions-toggle-btn">操作メニュー ▾</label>
 
-  <% if current_user.admin? || current_user.care_manager? || current_user.staff? %>
-    <p><%= link_to "日誌を記録", new_care_recipient_daily_report_path(@care_recipient), class: "btn btn-show" %></p>
-  <% end %>
+    <div class="calendar-actions">
+      <% if can_manage_schedules %>
+        <%= link_to "本人の予定を追加", new_care_recipient_personal_schedule_path(@care_recipient), class: "btn btn-show" %>
+      <% end %>
 
-  <% if current_user.admin? %>
-    <p><%= link_to "日誌を一括インポート", new_care_recipient_daily_report_import_path(@care_recipient), class: "btn btn-show" %></p>
-  <% end %>
+      <% if current_user.admin? || current_user.care_manager? || current_user.staff? %>
+        <%= link_to "日誌を記録", new_care_recipient_daily_report_path(@care_recipient), class: "btn btn-show" %>
+      <% end %>
 
-  <% if current_user.admin? || current_user.care_manager? || current_user.staff? %>
-    <p><%= link_to "定期予定を管理", care_recipient_recurring_schedules_path(@care_recipient), class: "btn btn-show" %></p>
-  <% end %>
+      <% if current_user.admin? %>
+        <%= link_to "日誌を一括インポート", new_care_recipient_daily_report_import_path(@care_recipient), class: "btn btn-show" %>
+      <% end %>
+
+      <% if current_user.admin? || current_user.care_manager? || current_user.staff? %>
+        <%= link_to "定期予定を管理", care_recipient_recurring_schedules_path(@care_recipient), class: "btn btn-show" %>
+      <% end %>
+    </div>
+  </div>
 
   <div id="calendar" data-care-recipient-id="<%= @care_recipient.id %>"
        data-can-manage-visits="<%= can_manage_visits %>"

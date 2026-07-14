@@ -777,6 +777,52 @@ p.alert.flash {
   vertical-align: middle;
 }
 
+/* 対象者カレンダー上部の操作ボタン群。スマホ幅ではボタンが大きく積み重なって
+   肝心のカレンダーがほとんど見えなくなっていたため、横並び＋折り返しにし、
+   スマホ幅ではさらに開閉トグルの下に畳んでカレンダーを先に見せる。 */
+.calendar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.calendar-actions-toggle-checkbox {
+  display: none;
+}
+
+.calendar-actions-toggle-btn {
+  display: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-secondary);
+  padding: 6px 12px;
+  margin-bottom: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+}
+
+@media (max-width: 600px) {
+  .calendar-actions-toggle-btn {
+    display: inline-flex;
+  }
+
+  .calendar-actions {
+    display: none;
+    flex-direction: column;
+  }
+
+  .calendar-actions-toggle-checkbox:checked ~ .calendar-actions {
+    display: flex;
+  }
+
+  .calendar-actions .btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
+
 /* ==========================================================================
    FullCalendar — brand the default chrome to match the app palette
    ========================================================================== */
