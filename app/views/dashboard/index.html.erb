@@ -5,6 +5,14 @@
   <%= link_to "訪問タイプ管理", visit_types_path, class: "btn btn-edit" %>
 </p>
 
+<p>
+  <% if @mine_only %>
+    <%= link_to "すべての対象者を表示", dashboard_path, class: "btn btn-secondary" %>
+  <% else %>
+    <%= link_to "自分の担当のみ表示", dashboard_path(mine: 1), class: "btn btn-secondary" %>
+  <% end %>
+</p>
+
 <div class="dashboard-stats">
   <div class="stat-tile">
     <div class="stat-label">対象者数</div>
@@ -25,7 +33,54 @@
     <div class="stat-label">未実施の訪問(累計)</div>
     <div class="stat-value"><%= @missed_visits_count %></div>
   </div>
+
+  <div class="stat-tile <%= "stat-critical" if @certification_alert_count > 0 %>">
+    <div class="stat-label">認定期限が近い/切れ</div>
+    <div class="stat-value"><%= @certification_alert_count %></div>
+  </div>
+
+  <div class="stat-tile <%= "stat-warning" if @monitoring_due_count > 0 %>">
+    <div class="stat-label">今月モニタリング未実施</div>
+    <div class="stat-value"><%= @monitoring_due_count %></div>
+  </div>
 </div>
+
+<% if @today_visits.present? %>
+  <div class="panel">
+    <h3>本日の訪問予定</h3>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>時刻</th>
+            <th>対象者</th>
+            <th>担当</th>
+            <th>訪問タイプ</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @today_visits.each do |visit| %>
+            <tr>
+              <td><%= l(visit.visited_at, format: :time_only) %></td>
+              <td><%= link_to visit.care_recipient.name, visit.care_recipient %></td>
+              <td><%= visit.assignee_label %></td>
+              <td><%= visit.visit_type&.name %></td>
+              <td>
+                <% if policy(visit).update? %>
+                  <%= button_to "完了にする", visit_report_path(visit),
+                        method: :patch,
+                        params: { visit_report: { status: "completed" }, return_to: "dashboard" },
+                        class: "btn btn-show" %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>
 
 <% if @recipient_rows.empty? %>
   <p>対象者が登録されていません。</p>
@@ -36,9 +91,12 @@
         <tr>
           <th>氏名</th>
           <th>介護度</th>
+          <th>認定期限</th>
+          <th>担当ケアマネ</th>
           <th>直近の記録</th>
           <th>次回訪問予定</th>
           <th>未実施件数</th>
+          <th>モニタリング</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -48,6 +106,15 @@
           <tr>
             <td><%= link_to care_recipient.name, care_recipient %></td>
             <td><%= care_recipient.care_level %></td>
+            <td>
+              <%= care_recipient.care_level_valid_until %>
+              <% if row[:certification_expired] %>
+                <span class="status-badge critical">期限切れ</span>
+              <% elsif row[:certification_expiring] %>
+                <span class="status-badge warning">まもなく期限切れ</span>
+              <% end %>
+            </td>
+            <td><%= care_recipient.primary_care_manager&.name %></td>
             <td>
               <% if row[:last_recorded_at] %>
                 <%= l(row[:last_recorded_at], format: :short) %>
@@ -68,6 +135,13 @@
                 <span class="status-badge critical">✕ <%= row[:missed_count] %>件</span>
               <% else %>
                 0
+              <% end %>
+            </td>
+            <td>
+              <% if row[:monitored_this_month] %>
+                <span class="status-badge good">実施済み</span>
+              <% else %>
+                <span class="status-badge warning">未実施</span>
               <% end %>
             </td>
             <td>

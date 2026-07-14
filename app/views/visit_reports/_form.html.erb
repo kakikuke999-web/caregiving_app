@@ -47,6 +47,13 @@
     <%= f.select :status, VisitReport.statuses.keys.map { |s| [VisitReportsController::STATUS_LABELS[s], s] }, {}, class: "form-select" %>
   </div>
 
+  <div class="mb-3">
+    <label>
+      <%= f.check_box :is_monitoring %>
+      モニタリング記録として記録する(毎月のモニタリング実施状況の管理に使用)
+    </label>
+  </div>
+
   <%= f.submit "保存", class: "btn btn-primary" %>
 <% end %>
 

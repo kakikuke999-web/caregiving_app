@@ -49,6 +49,21 @@ class CareRecipientsControllerTest < ActionDispatch::IntegrationTest
     assert_equal [visit_types(:one), visit_types(:two)].sort_by(&:id), @care_recipient.reload.visit_types.sort_by(&:id)
   end
 
+  test "can set the primary care manager and certification valid-until date" do
+    patch care_recipient_url(@care_recipient), params: {
+      care_recipient: {
+        name: @care_recipient.name,
+        primary_care_manager_id: users(:care_manager_one).id,
+        care_level_valid_until: 6.months.from_now.to_date
+      }
+    }
+    assert_redirected_to care_recipient_url(@care_recipient)
+
+    @care_recipient.reload
+    assert_equal users(:care_manager_one), @care_recipient.primary_care_manager
+    assert_equal 6.months.from_now.to_date, @care_recipient.care_level_valid_until
+  end
+
   test "should destroy care_recipient" do
     assert_difference("CareRecipient.count", -1) do
       delete care_recipient_url(@care_recipient)

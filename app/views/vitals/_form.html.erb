@@ -15,6 +15,13 @@
     <%= f.select :type, Vital::TYPES.map { |t| [Vital::LABELS[t], t] }, { prompt: "選択してください" }, class: "form-select", id: "vital_type_select" %>
   </div>
 
+  <% if @last_values_by_type.present? %>
+    <p>
+      <button type="button" class="btn btn-secondary" id="copy-last-value-btn">前回の値をコピー</button>
+    </p>
+    <script id="vital-last-values" type="application/json"><%= raw(@last_values_by_type.to_json) %></script>
+  <% end %>
+
   <div class="mb-3" id="vital-value-field">
     <%= f.label :value, "値" %>
     <%= f.number_field :value, step: "0.1", class: "form-control" %>
@@ -59,5 +66,18 @@
 
     select.addEventListener('change', toggle);
     toggle();
+
+    const copyBtn = document.getElementById('copy-last-value-btn');
+    const lastValuesEl = document.getElementById('vital-last-values');
+    if (copyBtn && lastValuesEl) {
+      const lastValues = JSON.parse(lastValuesEl.textContent);
+      copyBtn.addEventListener('click', function () {
+        const last = lastValues[select.value];
+        if (!last) return;
+        if (last.value !== null) document.getElementById('vital_value').value = last.value;
+        if (last.systolic !== null) document.getElementById('vital_systolic').value = last.systolic;
+        if (last.diastolic !== null) document.getElementById('vital_diastolic').value = last.diastolic;
+      });
+    }
   });
 </script>

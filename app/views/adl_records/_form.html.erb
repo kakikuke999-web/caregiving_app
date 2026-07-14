@@ -10,6 +10,13 @@
     </div>
   <% end %>
 
+  <% if @last_adl_record.present? %>
+    <p>
+      <button type="button" class="btn btn-secondary" id="copy-last-adl-btn">前回の記録をコピー</button>
+    </p>
+    <script id="adl-last-record" type="application/json"><%= raw(@last_adl_record.attributes.to_json) %></script>
+  <% end %>
+
   <div class="mb-3">
     <%= f.label :recorded_at, "記録日時" %>
     <%= f.datetime_field :recorded_at, class: "form-control" %>
@@ -94,3 +101,32 @@
 
   <%= f.submit "保存", class: "btn btn-primary" %>
 <% end %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const copyBtn = document.getElementById('copy-last-adl-btn');
+    const lastEl = document.getElementById('adl-last-record');
+    if (!copyBtn || !lastEl) return;
+
+    const last = JSON.parse(lastEl.textContent);
+    const selectAndNumberFields = [
+      'meal_intake', 'excretion_status', 'sleep_quality',
+      'breakfast_staple', 'breakfast_side', 'lunch_staple', 'lunch_side', 'dinner_staple', 'dinner_side',
+      'urination_count'
+    ];
+    const radioFields = ['bathed', 'medication_taken', 'bowel_movement'];
+
+    copyBtn.addEventListener('click', function () {
+      selectAndNumberFields.forEach(function (field) {
+        if (last[field] === null || last[field] === undefined) return;
+        const el = document.getElementById('adl_record_' + field);
+        if (el) el.value = last[field];
+      });
+      radioFields.forEach(function (field) {
+        if (last[field] === null || last[field] === undefined) return;
+        const el = document.getElementById('adl_record_' + field + '_' + last[field]);
+        if (el) el.checked = true;
+      });
+    });
+  });
+</script>

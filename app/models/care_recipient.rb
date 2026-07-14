@@ -3,6 +3,8 @@ class CareRecipient < ApplicationRecord
     has_one_attached :photo
     attr_accessor :remove_photo
 
+    belongs_to :primary_care_manager, class_name: "User", optional: true
+
     has_many :family_memberships, dependent: :destroy
     has_many :family_members, through: :family_memberships, source: :user
     has_many :visit_reports, dependent: :destroy
@@ -15,7 +17,30 @@ class CareRecipient < ApplicationRecord
     has_many :visit_types, through: :care_recipient_visit_types
     has_many :care_documents, dependent: :destroy
     has_many :recurring_schedules, dependent: :destroy
+    has_many :support_logs, dependent: :destroy
 
+    CARE_LEVELS = %w[自立 要支援1 要支援2 要介護1 要介護2 要介護3 要介護4 要介護5].freeze
+
+    CERTIFICATION_WARNING_DAYS = 60
+
+    validates :care_level, inclusion: { in: CARE_LEVELS }, allow_blank: true
+
+    def certification_expiring?
+      return false unless care_level_valid_until.present?
+
+      care_level_valid_until >= Date.current && care_level_valid_until <= CERTIFICATION_WARNING_DAYS.days.from_now.to_date
+    end
+
+    def certification_expired?
+      care_level_valid_until.present? && care_level_valid_until < Date.current
+    end
+
+    # 今月「モニタリング記録」としてマークされた完了済み訪問記録があるか（介護保険の毎月モニタリング義務の実施確認用）
+    def monitored_this_month?
+      visit_reports.where(is_monitoring: true, status: :completed)
+                   .where(visited_at: Time.zone.now.all_month)
+                   .exists?
+    end
 
     def age
         return nil if birthday.blank?

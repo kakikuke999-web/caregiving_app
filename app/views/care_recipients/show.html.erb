@@ -9,6 +9,20 @@
   <p><strong>生年月日:</strong> <%= @care_recipient.birthday %>(<%= @care_recipient.age %>歳)</p>
   <p><strong>住所:</strong> <%= @care_recipient.address %></p>
   <p><strong>介護度:</strong> <%= value_or_unset(@care_recipient.care_level) %></p>
+  <p>
+    <strong>認定有効期限:</strong>
+    <% if @care_recipient.care_level_valid_until %>
+      <%= @care_recipient.care_level_valid_until %>
+      <% if @care_recipient.certification_expired? %>
+        <span class="status-badge critical">期限切れ</span>
+      <% elsif @care_recipient.certification_expiring? %>
+        <span class="status-badge warning">まもなく期限切れ</span>
+      <% end %>
+    <% else %>
+      <span class="text-unset">未設定</span>
+    <% end %>
+  </p>
+  <p><strong>担当ケアマネージャー:</strong> <%= @care_recipient.primary_care_manager&.name || content_tag(:span, "未設定", class: "text-unset") %></p>
 
   <div class="actions">
     <%= link_to "編集", edit_care_recipient_path(@care_recipient), class: "btn btn-edit" %>
@@ -58,6 +72,14 @@
   <p>リハビリ実施計画書・居宅サービス計画書・通所介護計画書など、事業所外で作成された公式書類を保管します。</p>
   <p><%= link_to "書類一覧を見る", care_recipient_care_documents_path(@care_recipient), class: "btn btn-show" %></p>
 </div>
+
+<% if policy(SupportLog.new(care_recipient: @care_recipient)).index? %>
+  <div class="support-logs panel">
+    <h3>支援経過記録</h3>
+    <p>電話連絡・他機関との調整・家族対応など、訪問を伴わないやり取りを時系列で記録します(家族には非公開)。</p>
+    <p><%= link_to "支援経過記録を見る", care_recipient_support_logs_path(@care_recipient), class: "btn btn-show" %></p>
+  </div>
+<% end %>
 
 <div class="health-trends panel">
   <h3>健康推移</h3>

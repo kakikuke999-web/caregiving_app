@@ -63,7 +63,10 @@ class VisitReportsController < ApplicationController
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace("calendar", partial: "calendar", locals: { care_recipient: @report.care_recipient })
         end
-        format.html { redirect_to calendar_care_recipient_path(@report.care_recipient), notice: '更新しました' }
+        format.html do
+          destination = params[:return_to] == "dashboard" ? dashboard_path : calendar_care_recipient_path(@report.care_recipient)
+          redirect_to destination, notice: '更新しました'
+        end
       end
     else
       @available_visit_types = available_visit_types_for(@report.care_recipient)
@@ -94,7 +97,7 @@ class VisitReportsController < ApplicationController
   private
 
   def visit_report_params
-    params.require(:visit_report).permit(:care_recipient_id, :visited_at, :ended_at, :user_id, :visit_type_id, :notes, :status, :provider_name)
+    params.require(:visit_report).permit(:care_recipient_id, :visited_at, :ended_at, :user_id, :visit_type_id, :notes, :status, :provider_name, :is_monitoring)
   end
 
   def available_visit_types_for(care_recipient)

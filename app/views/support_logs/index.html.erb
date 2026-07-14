@@ -1,0 +1,43 @@
+<h2><%= @care_recipient.name %>さんの支援経過記録</h2>
+
+<p><%= link_to "対象者ページに戻る", @care_recipient %></p>
+
+<% if policy(SupportLog.new(care_recipient: @care_recipient)).create? %>
+  <%= link_to "新規登録", new_care_recipient_support_log_path(@care_recipient), class: "btn btn-primary mb-3" %>
+<% end %>
+
+<% if @support_logs.any? %>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>日時</th>
+          <th>種別</th>
+          <th>内容</th>
+          <th>記録者</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @support_logs.each do |support_log| %>
+          <tr>
+            <td><%= l(support_log.occurred_at, format: :short) %></td>
+            <td><%= support_log.label %></td>
+            <td style="white-space: pre-wrap;"><%= support_log.body %></td>
+            <td><%= support_log.user.name %></td>
+            <td>
+              <% if policy(support_log).update? %>
+                <%= link_to "編集", edit_care_recipient_support_log_path(@care_recipient, support_log) %>
+              <% end %>
+              <% if policy(support_log).destroy? %>
+                <%= button_to "削除", care_recipient_support_log_path(@care_recipient, support_log), method: :delete, data: { confirm: "削除しますか？" }, class: "btn btn-delete" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-muted">登録された支援経過記録はありません</p>
+<% end %>

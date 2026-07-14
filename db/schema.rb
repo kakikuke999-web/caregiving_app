@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_07_12_211818) do
+ActiveRecord::Schema[7.1].define(version: 2026_07_13_205314) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -105,6 +105,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_12_211818) do
     t.string "primary_doctor"
     t.string "primary_hospital"
     t.text "regular_medications"
+    t.bigint "primary_care_manager_id"
+    t.date "care_level_valid_until"
+    t.index ["primary_care_manager_id"], name: "index_care_recipients_on_primary_care_manager_id"
   end
 
   create_table "comments", force: :cascade do |t|
@@ -183,6 +186,18 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_12_211818) do
     t.index ["visit_type_id"], name: "index_recurring_schedules_on_visit_type_id"
   end
 
+  create_table "support_logs", force: :cascade do |t|
+    t.bigint "care_recipient_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "occurred_at"
+    t.string "category"
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["care_recipient_id"], name: "index_support_logs_on_care_recipient_id"
+    t.index ["user_id"], name: "index_support_logs_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -209,6 +224,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_12_211818) do
     t.datetime "ended_at"
     t.string "provider_name"
     t.bigint "recurring_schedule_id"
+    t.boolean "is_monitoring", default: false, null: false
     t.index ["care_recipient_id"], name: "index_visit_reports_on_care_recipient_id"
     t.index ["recurring_schedule_id"], name: "index_visit_reports_on_recurring_schedule_id"
     t.index ["user_id"], name: "index_visit_reports_on_user_id"
@@ -244,6 +260,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_12_211818) do
   add_foreign_key "care_documents", "users", column: "uploaded_by_id"
   add_foreign_key "care_recipient_visit_types", "care_recipients"
   add_foreign_key "care_recipient_visit_types", "visit_types"
+  add_foreign_key "care_recipients", "users", column: "primary_care_manager_id"
   add_foreign_key "comments", "users"
   add_foreign_key "comments", "visit_reports"
   add_foreign_key "emergency_contacts", "care_recipients"
@@ -257,6 +274,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_12_211818) do
   add_foreign_key "recurring_schedules", "users"
   add_foreign_key "recurring_schedules", "users", column: "created_by_id"
   add_foreign_key "recurring_schedules", "visit_types"
+  add_foreign_key "support_logs", "care_recipients"
+  add_foreign_key "support_logs", "users"
   add_foreign_key "visit_reports", "care_recipients"
   add_foreign_key "visit_reports", "recurring_schedules"
   add_foreign_key "visit_reports", "users"

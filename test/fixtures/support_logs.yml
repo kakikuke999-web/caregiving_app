@@ -3,13 +3,13 @@
 one:
   care_recipient: one
   user: one
-  visit_type: one
-  notes: MyText
-  visited_at: 2025-11-04 14:45:07
+  occurred_at: 2026-07-14 05:53:14
+  category: phone
+  body: MyText
 
 two:
   care_recipient: two
   user: two
-  visit_type: two
-  notes: MyText
-  visited_at: 2025-11-04 14:45:07
+  occurred_at: 2026-07-14 05:53:14
+  category: phone
+  body: MyText

@@ -10,6 +10,7 @@ class AdlRecordsController < ApplicationController
   def new
     @adl_record = @care_recipient.adl_records.new
     authorize @adl_record
+    @last_adl_record = @care_recipient.adl_records.order(recorded_at: :desc).first
   end
 
   def create

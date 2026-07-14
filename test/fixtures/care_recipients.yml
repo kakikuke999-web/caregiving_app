@@ -4,12 +4,12 @@ one:
   name: MyString
   birthday: 2026-06-13
   address: MyString
-  care_level: MyString
+  care_level: 要介護2
   memo: MyText
 
 two:
   name: MyString
   birthday: 2026-06-13
   address: MyString
-  care_level: MyString
+  care_level: 要介護2
   memo: MyText

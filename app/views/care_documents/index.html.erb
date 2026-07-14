@@ -2,7 +2,7 @@
 
 <p><%= link_to "対象者ページに戻る", @care_recipient %></p>
 
-<% if policy(@care_recipient.care_documents.new).create? %>
+<% if policy(CareDocument.new(care_recipient: @care_recipient)).create? %>
   <%= link_to "新規登録", new_care_recipient_care_document_path(@care_recipient), class: "btn btn-primary mb-3" %>
 <% end %>
 

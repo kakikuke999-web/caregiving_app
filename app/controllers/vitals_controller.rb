@@ -10,6 +10,7 @@ class VitalsController < ApplicationController
   def new
     @vital = @care_recipient.vitals.new(type: params[:type])
     authorize @vital
+    @last_values_by_type = last_values_by_type
   end
 
   def create
@@ -56,5 +57,15 @@ class VitalsController < ApplicationController
 
   def vital_params
     params.require(:vital).permit(:type, :value, :systolic, :diastolic, :recorded_at, :note)
+  end
+
+  # 各項目ごとの直近の記録値（「前回の値をコピー」ボタン用）
+  def last_values_by_type
+    Vital::TYPES.index_with do |type|
+      last = @care_recipient.vitals.where(type: type).order(recorded_at: :desc).first
+      next nil unless last
+
+      { value: last.value, systolic: last.systolic, diastolic: last.diastolic }
+    end
   end
 end

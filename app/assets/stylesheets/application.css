@@ -756,6 +756,7 @@ p.alert.flash {
 
 .status-badge.warning { background: var(--color-warning-light); color: var(--color-warning-dark); }
 .status-badge.critical { background: var(--color-danger-light); color: var(--color-danger-dark); }
+.status-badge.good { background: var(--color-success-light); color: var(--color-success-dark); }
 
 .calendar-legend {
   display: flex;

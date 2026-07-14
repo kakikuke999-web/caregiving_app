@@ -4,5 +4,8 @@
   <p><strong>担当者:</strong> <%= report.assignee_label %></p>
   <p><strong>訪問日時:</strong> <%= report.time_range_label %></p>
   <p><strong>ステータス:</strong> <%= VisitReportsController::STATUS_LABELS[report.status] %></p>
+  <% if report.is_monitoring? %>
+    <p><span class="status-badge">モニタリング記録</span></p>
+  <% end %>
   <p><strong>内容:</strong> <%= simple_format(report.notes) %></p>
 </div>

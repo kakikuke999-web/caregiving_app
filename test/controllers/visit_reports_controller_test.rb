@@ -123,6 +123,17 @@ class VisitReportsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "can mark a visit report as a monitoring record" do
+    patch visit_report_url(@visit_report), params: { visit_report: { is_monitoring: true } }
+    assert @visit_report.reload.is_monitoring?
+  end
+
+  test "updating with return_to=dashboard redirects to the dashboard instead of the calendar" do
+    patch visit_report_url(@visit_report), params: { visit_report: { status: "completed" }, return_to: "dashboard" }
+    assert_redirected_to dashboard_path
+    assert @visit_report.reload.completed?
+  end
+
   test "admin can destroy a visit_report" do
     assert_difference("VisitReport.count", -1) do
       delete visit_report_url(@visit_report)

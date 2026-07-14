@@ -67,11 +67,19 @@
   <!-- 介護度 -->
   <div>
     <%= form.label :care_level, "介護度", style: "display: block" %>
-    <%= form.select :care_level, [
-        "自立",
-        "要支援1", "要支援2",
-        "要介護1", "要介護2", "要介護3", "要介護4", "要介護5"
-      ], prompt: "選択してください", class: "form-control" %>
+    <%= form.select :care_level, CareRecipient::CARE_LEVELS, prompt: "選択してください", class: "form-control" %>
+  </div>
+
+  <!-- 認定有効期限 -->
+  <div>
+    <%= form.label :care_level_valid_until, "認定有効期限", style: "display: block" %>
+    <%= form.date_field :care_level_valid_until, class: "form-control" %>
+  </div>
+
+  <!-- 担当ケアマネージャー -->
+  <div>
+    <%= form.label :primary_care_manager_id, "担当ケアマネージャー", style: "display: block" %>
+    <%= form.collection_select :primary_care_manager_id, User.where(role: [:admin, :care_manager]).order(:name), :id, :name, { prompt: "選択してください" }, class: "form-control" %>
   </div>
 
   <!-- 利用する訪問タイプ -->

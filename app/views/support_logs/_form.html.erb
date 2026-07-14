@@ -1,0 +1,29 @@
+<%= form_with model: [care_recipient, support_log], local: true do |f| %>
+  <% if support_log.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= support_log.errors.count %>件のエラーにより保存できませんでした:</h2>
+      <ul>
+        <% support_log.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :occurred_at, "日時" %>
+    <%= f.datetime_field :occurred_at, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :category, "種別" %>
+    <%= f.select :category, SupportLog::CATEGORIES.map { |c| [SupportLog::LABELS[c], c] }, { prompt: "選択してください" }, class: "form-select" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :body, "内容" %>
+    <%= f.text_area :body, class: "form-control", rows: 5 %>
+  </div>
+
+  <%= f.submit "保存", class: "btn btn-primary" %>
+<% end %>
