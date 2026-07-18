@@ -38,6 +38,7 @@
     </div>
 
     <h3>食事摂取量（昼食・10段階）</h3>
+    <p class="text-unset">0=まったく食べなかった 〜 10=全量摂取、の10段階で入力してください。</p>
     <div class="field-row">
       <div class="field-col">
         <%= f.label :lunch_staple, "主食" %>
@@ -76,7 +77,8 @@
 
     <div class="mb-3">
       <%= f.label :notes, "本日の様子（自由記述）" %>
-      <%= f.text_area :notes, class: "form-control", rows: 5 %>
+      <%= f.text_area :notes, class: "form-control", rows: 5,
+            placeholder: "例: 食欲があり会話も活発だった。転倒等の事故はなし。" %>
     </div>
 
     <%= f.submit "登録", class: "btn btn-primary" %>

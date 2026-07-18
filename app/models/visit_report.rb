@@ -7,6 +7,7 @@ class VisitReport < ApplicationRecord
 
   enum status: { planned: 0, completed: 1, missed: 2 }
 
+  validates :visited_at, presence: true
   validate :ended_at_after_visited_at
   validate :user_or_provider_present
 

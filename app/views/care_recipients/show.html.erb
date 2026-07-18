@@ -25,9 +25,13 @@
   <p><strong>担当ケアマネージャー:</strong> <%= @care_recipient.primary_care_manager&.name || content_tag(:span, "未設定", class: "text-unset") %></p>
 
   <div class="actions">
-    <%= link_to "編集", edit_care_recipient_path(@care_recipient), class: "btn btn-edit" %>
+    <% if policy(@care_recipient).update? %>
+      <%= link_to "編集", edit_care_recipient_path(@care_recipient), class: "btn btn-edit" %>
+    <% end %>
     <%= link_to "対象者一覧に戻る", care_recipients_path, class: "btn btn-show" %>
-    <%= button_to "削除", @care_recipient, method: :delete, data: { confirm: "削除しますか？" }, class: "btn btn-delete" %>
+    <% if policy(@care_recipient).destroy? %>
+      <%= button_to "削除", @care_recipient, method: :delete, data: { confirm: "削除しますか？" }, class: "btn btn-delete" %>
+    <% end %>
   </div>
 </div>
 
@@ -76,7 +80,10 @@
     <p class="text-unset">まだ計画書が作成されていません</p>
   <% end %>
   <p>第1〜3表をアプリ内で作成・編集し、印刷・PDF保存できます(第3表は定期予定から自動作成)。</p>
-  <p><%= link_to "計画書を見る・作成する", care_recipient_care_plans_path(@care_recipient), class: "btn btn-show" %></p>
+  <p>
+    <%= link_to policy(CarePlan.new(care_recipient: @care_recipient)).create? ? "計画書を見る・作成する" : "計画書を見る",
+          care_recipient_care_plans_path(@care_recipient), class: "btn btn-show" %>
+  </p>
 </div>
 
 <div class="care-documents panel">

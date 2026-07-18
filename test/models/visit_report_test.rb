@@ -15,6 +15,12 @@ class VisitReportTest < ActiveSupport::TestCase
     assert build_report(user: users(:staff_one)).valid?
   end
 
+  test "invalid without a visited_at" do
+    report = build_report(user: users(:staff_one), visited_at: nil)
+    assert_not report.valid?
+    assert_includes report.errors[:visited_at], "を入力してください"
+  end
+
   test "valid with only a provider_name (no internal user)" do
     assert build_report(provider_name: "ふれんず訪問看護ステーション").valid?
   end

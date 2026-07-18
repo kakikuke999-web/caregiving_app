@@ -106,6 +106,21 @@ class VisitReportsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 11, created.ended_at.hour
   end
 
+  test "rejects a blank start time instead of silently creating a dateless visit report" do
+    assert_no_difference("VisitReport.count") do
+      post visit_reports_url, params: {
+        visit_report: {
+          care_recipient_id: care_recipients(:one).id,
+          visit_type_id: visit_types(:one).id,
+          user_id: users(:staff_one).id,
+          status: "planned"
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+  end
+
   test "rejects an end time earlier than the start time" do
     assert_no_difference("VisitReport.count") do
       post visit_reports_url, params: {

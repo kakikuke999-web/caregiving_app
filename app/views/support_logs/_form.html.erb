@@ -22,7 +22,8 @@
 
   <div class="mb-3">
     <%= f.label :body, "内容" %>
-    <%= f.text_area :body, class: "form-control", rows: 5 %>
+    <%= f.text_area :body, class: "form-control", rows: 5,
+          placeholder: "例: 訪問看護ステーションから電話あり。今週の体調について報告を受けた。" %>
   </div>
 
   <%= f.submit "保存", class: "btn btn-primary" %>

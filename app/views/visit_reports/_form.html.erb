@@ -13,7 +13,7 @@
   <%= f.hidden_field :care_recipient_id %>
 
   <div class="mb-3">
-    <%= f.label :visited_at, "開始時刻" %>
+    <%= f.label :visited_at do %>開始時刻<span class="required-mark">必須</span><% end %>
     <%= f.datetime_field :visited_at, class: "form-control" %>
   </div>
 
@@ -33,7 +33,7 @@
   </div>
 
   <div class="mb-3">
-    <%= f.label :visit_type_id, "訪問タイプ" %>
+    <%= f.label :visit_type_id do %>訪問タイプ<span class="required-mark">必須</span><% end %>
     <%= f.collection_select :visit_type_id, available_visit_types, :id, :name, prompt: "選択してください", class: "form-select" %>
   </div>
 

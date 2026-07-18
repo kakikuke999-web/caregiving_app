@@ -627,6 +627,14 @@ p.alert.flash {
   margin-right: 4px;
 }
 
+/* 未経験者にも必須項目がひと目でわかるように、ラベル横に添える小さな印 */
+.required-mark {
+  color: var(--color-danger);
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 4px;
+}
+
 /* 体温・血圧・脈のような細い数値入力を横並びにまとめ、フォームを間延びさせない */
 .field-row {
   display: flex;
