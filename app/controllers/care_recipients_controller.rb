@@ -46,13 +46,13 @@ class CareRecipientsController < ApplicationController
 
   # PATCH/PUT /care_recipients/1 or /care_recipients/1.json
   def update
-      authorize @care_recipient
-      # 写真削除チェック（チェックボックスがオンなら削除）
-  if params[:care_recipient][:remove_photo] == "1"
-    @care_recipient.photo.purge
-  end
+    authorize @care_recipient
+    # 写真削除チェック（チェックボックスがオンなら削除）
+    if params[:care_recipient][:remove_photo] == "1"
+      @care_recipient.photo.purge
+    end
 
-  respond_to do |format|
+    respond_to do |format|
       if @care_recipient.update(care_recipient_params)
         format.html { redirect_to @care_recipient, notice: "対象者情報を更新しました", status: :see_other }
         format.json { render :show, status: :ok, location: @care_recipient }

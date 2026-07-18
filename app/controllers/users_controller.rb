@@ -11,6 +11,11 @@ class UsersController < ApplicationController
 
   def update
     authorize @user
+
+    if user_params[:role].present? && !policy(@user).assignable_roles.include?(user_params[:role])
+      return redirect_to edit_user_path(@user), alert: "管理者権限への変更は管理者のみが行えます"
+    end
+
     if @user.update(user_params)
       redirect_to users_path, notice: "ユーザー情報を更新しました"
     else

@@ -13,10 +13,10 @@
     
       <h2><%= care_recipient.name %></h2>
 
-      <p><strong>生年月日:</strong> <%= care_recipient.birthday %></p>
-      <p><strong>年齢:</strong> <%= care_recipient.age %> 歳</p>
-      <p><strong>住所:</strong> <%= care_recipient.address %></p>
-      <p><strong>介護度:</strong> <%= care_recipient.care_level %></p>
+      <p><strong>生年月日:</strong> <%= value_or_unset(care_recipient.birthday) %></p>
+      <p><strong>年齢:</strong> <%= care_recipient.age ? "#{care_recipient.age} 歳" : value_or_unset(nil) %></p>
+      <p><strong>住所:</strong> <%= value_or_unset(care_recipient.address) %></p>
+      <p><strong>介護度:</strong> <%= value_or_unset(care_recipient.care_level) %></p>
 
       <% if care_recipient.memo.present? %>
         <p><strong>メモ:</strong> <%= simple_format(care_recipient.memo) %></p>

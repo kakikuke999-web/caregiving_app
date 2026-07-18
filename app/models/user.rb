@@ -22,7 +22,8 @@ class User < ApplicationRecord
   has_many :family_memberships, dependent: :destroy
   has_many :care_recipients, through: :family_memberships
 
-  # validates :name, presence: true
+  validates :name, presence: true
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,

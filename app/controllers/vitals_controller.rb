@@ -4,7 +4,7 @@ class VitalsController < ApplicationController
 
   def index
     authorize @care_recipient, :show?
-    @vitals = @care_recipient.vitals.order(recorded_at: :desc)
+    @vitals = @care_recipient.vitals.includes(:recorded_by).order(recorded_at: :desc)
   end
 
   def new

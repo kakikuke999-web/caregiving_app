@@ -23,7 +23,7 @@
           <tr>
             <td>
               <%= care_plan.created_on %>
-              <% if care_plan.latest? %><span class="status-badge good care-plan-version-badge">最新</span><% end %>
+              <% if care_plan == @care_plans.first %><span class="status-badge good care-plan-version-badge">最新</span><% end %>
             </td>
             <td><%= care_plan.office_name %></td>
             <td><%= care_plan.created_by.name %></td>
