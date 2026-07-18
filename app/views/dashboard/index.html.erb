@@ -3,6 +3,7 @@
 <p>
   <%= link_to "全対象者カレンダーを見る", calendar_path, class: "btn btn-show" %>
   <%= link_to "訪問タイプ管理", visit_types_path, class: "btn btn-edit" %>
+  <%= button_to "アラートメールをテスト送信", alert_notifications_send_test_path, method: :post, class: "btn btn-secondary" %>
 </p>
 
 <p>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_07_14_212352) do
+ActiveRecord::Schema[7.1].define(version: 2026_07_18_012508) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -80,6 +80,47 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_14_212352) do
     t.datetime "updated_at", null: false
     t.index ["care_recipient_id"], name: "index_care_documents_on_care_recipient_id"
     t.index ["uploaded_by_id"], name: "index_care_documents_on_uploaded_by_id"
+  end
+
+  create_table "care_plan_goals", force: :cascade do |t|
+    t.bigint "care_plan_id", null: false
+    t.text "issue"
+    t.text "long_term_goal"
+    t.string "long_term_goal_period"
+    t.text "short_term_goal"
+    t.string "short_term_goal_period"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["care_plan_id"], name: "index_care_plan_goals_on_care_plan_id"
+  end
+
+  create_table "care_plan_services", force: :cascade do |t|
+    t.bigint "care_plan_goal_id", null: false
+    t.text "content"
+    t.string "category"
+    t.string "provider"
+    t.string "frequency"
+    t.string "period"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["care_plan_goal_id"], name: "index_care_plan_services_on_care_plan_goal_id"
+  end
+
+  create_table "care_plans", force: :cascade do |t|
+    t.bigint "care_recipient_id", null: false
+    t.date "created_on"
+    t.string "office_name"
+    t.text "policy_summary"
+    t.text "family_intention"
+    t.text "certification_committee_opinion"
+    t.string "assistance_reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "created_by_id", null: false
+    t.index ["care_recipient_id"], name: "index_care_plans_on_care_recipient_id"
+    t.index ["created_by_id"], name: "index_care_plans_on_created_by_id"
   end
 
   create_table "care_recipient_visit_types", force: :cascade do |t|
@@ -213,6 +254,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_14_212352) do
     t.datetime "updated_at", null: false
     t.integer "role"
     t.string "name"
+    t.boolean "alert_emails_enabled", default: true, null: false
+    t.date "last_alert_email_sent_on"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -264,6 +307,10 @@ ActiveRecord::Schema[7.1].define(version: 2026_07_14_212352) do
   add_foreign_key "adl_records", "users", column: "recorded_by_id"
   add_foreign_key "care_documents", "care_recipients"
   add_foreign_key "care_documents", "users", column: "uploaded_by_id"
+  add_foreign_key "care_plan_goals", "care_plans"
+  add_foreign_key "care_plan_services", "care_plan_goals"
+  add_foreign_key "care_plans", "care_recipients"
+  add_foreign_key "care_plans", "users", column: "created_by_id"
   add_foreign_key "care_recipient_visit_types", "care_recipients"
   add_foreign_key "care_recipient_visit_types", "visit_types"
   add_foreign_key "care_recipients", "users", column: "primary_care_manager_id"

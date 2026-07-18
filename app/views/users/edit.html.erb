@@ -17,6 +17,13 @@
       <%= f.select :role, User.roles.keys.map { |r| [User::ROLE_LABELS[r], r] }, {}, class: "form-select" %>
     </div>
 
+    <div class="field">
+      <label>
+        <%= f.check_box :alert_emails_enabled %>
+        ダッシュボードの要確認アラートをメールで受け取る(ケアマネージャー・管理者のみ対象)
+      </label>
+    </div>
+
     <div class="actions">
       <%= f.submit "更新する", class: "btn btn-new" %>
     </div>

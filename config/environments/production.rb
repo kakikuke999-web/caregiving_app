@@ -76,9 +76,27 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  # メール内のリンク生成に使うホスト名。Renderが自動注入するRENDER_EXTERNAL_HOSTNAMEを
+  # 既定値とし、APP_HOSTで明示的に上書きできるようにしておく。
+  config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST", ENV["RENDER_EXTERNAL_HOSTNAME"]) }
+
+  # SMTP_ADDRESS が設定された時点で自動的にメール配信を有効化する（STORAGE_BUCKET と同じ
+  # 「env varが揃ったら自動切り替え」パターン）。未設定の間は何もせず、配信は行われない
+  # （Deviseのパスワード再設定メールも含め、これまで通り黙って失敗する）。
+  if ENV["SMTP_ADDRESS"].present?
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address: ENV["SMTP_ADDRESS"],
+      port: ENV.fetch("SMTP_PORT", 587).to_i,
+      user_name: ENV["SMTP_USER_NAME"],
+      password: ENV["SMTP_PASSWORD"],
+      domain: ENV["SMTP_DOMAIN"],
+      authentication: "plain",
+      enable_starttls_auto: true
+    }
+    config.action_mailer.perform_deliveries = true
+    config.action_mailer.raise_delivery_errors = true
+  end
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

@@ -1,0 +1,132 @@
+<%= form_with model: [care_recipient, care_plan], local: true do |f| %>
+  <% if care_plan.errors.any? %>
+    <div class="alert alert-danger">
+      <h2><%= care_plan.errors.count %>件のエラーにより保存できませんでした:</h2>
+      <ul>
+        <% care_plan.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="panel">
+    <h3>基本情報(第1表)</h3>
+
+    <div class="field-row">
+      <div class="field-col">
+        <%= f.label :created_on, "計画作成日" %>
+        <%= f.date_field :created_on, class: "form-control" %>
+      </div>
+      <div class="field-col" style="flex: 2 1 300px;">
+        <%= f.label :office_name, "居宅介護支援事業者・事業所名" %>
+        <%= f.text_field :office_name, class: "form-control" %>
+      </div>
+    </div>
+
+    <div class="field">
+      <%= f.label :family_intention, "利用者及び家族の生活に対する意向" %>
+      <%= f.text_area :family_intention, rows: 3, class: "form-control" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :certification_committee_opinion, "介護認定審査会の意見及びサービスの種類の指定" %>
+      <%= f.text_area :certification_committee_opinion, rows: 2, class: "form-control" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :policy_summary, "総合的な援助の方針" %>
+      <%= f.text_area :policy_summary, rows: 3, class: "form-control" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :assistance_reason, "生活援助中心型の算定理由(該当する場合のみ)" %>
+      <%= f.text_field :assistance_reason, class: "form-control" %>
+    </div>
+  </div>
+
+  <div class="cp-goals-section">
+    <div class="cp-goals-header">
+      <h3>ニーズ・目標・サービス(第2表)</h3>
+    </div>
+
+    <div id="cp-goals-list">
+      <%= f.fields_for :care_plan_goals do |goal_form| %>
+        <%= render "goal_fields", f: goal_form %>
+      <% end %>
+    </div>
+
+    <template id="cp-goal-template">
+      <% blank_goal = CarePlanGoal.new %>
+      <% blank_goal.care_plan_services.build %>
+      <%= f.fields_for :care_plan_goals, blank_goal, child_index: "NEW_GOAL_RECORD" do |goal_form| %>
+        <%= render "goal_fields", f: goal_form %>
+      <% end %>
+    </template>
+
+    <button type="button" class="btn btn-secondary" id="cp-add-goal-btn">＋ 課題(ニーズ)を追加</button>
+  </div>
+
+  <p class="text-unset">※ 週間サービス計画表(第3表)は「定期予定」の登録内容から自動的に作成されます。この画面では入力の必要はありません。</p>
+
+  <div class="actions">
+    <%= f.submit "保存", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<script>
+  (function () {
+    const goalsList = document.getElementById('cp-goals-list');
+    const goalTemplate = document.getElementById('cp-goal-template');
+    const addGoalBtn = document.getElementById('cp-add-goal-btn');
+    if (!goalsList || !goalTemplate || !addGoalBtn) return;
+
+    function nextIndex() {
+      return Date.now().toString() + Math.floor(Math.random() * 1000);
+    }
+
+    addGoalBtn.addEventListener('click', function () {
+      const html = goalTemplate.innerHTML.replace(/NEW_GOAL_RECORD/g, nextIndex());
+      goalsList.insertAdjacentHTML('beforeend', html);
+    });
+
+    // イベント委譲: 動的に追加された要素にも効くように、リスト全体で1つだけリスナーを持つ
+    goalsList.addEventListener('click', function (event) {
+      const addServiceBtn = event.target.closest('.cp-add-service-btn');
+      if (addServiceBtn) {
+        const goalBlock = addServiceBtn.closest('.cp-goal');
+        const servicesList = goalBlock.querySelector('[data-services-list]');
+        const serviceTemplate = goalBlock.querySelector('.cp-service-template');
+        const html = serviceTemplate.innerHTML.replace(/NEW_SERVICE_RECORD/g, nextIndex());
+        servicesList.insertAdjacentHTML('beforeend', html);
+        return;
+      }
+
+      const removeServiceBtn = event.target.closest('.cp-remove-service-btn');
+      if (removeServiceBtn) {
+        const row = removeServiceBtn.closest('.cp-service-row');
+        removeGoalOrServiceBlock(row, '本当にこのサービスを削除しますか？');
+        return;
+      }
+
+      const removeGoalBtn = event.target.closest('.cp-remove-goal-btn');
+      if (removeGoalBtn) {
+        const goalBlock = removeGoalBtn.closest('.cp-goal');
+        removeGoalOrServiceBlock(goalBlock, 'この課題(ニーズ)と、含まれるサービスをすべて削除しますか？');
+      }
+    });
+
+    function removeGoalOrServiceBlock(block, confirmMessage) {
+      const persisted = block.dataset.persisted === 'true';
+      if (persisted && !window.confirm(confirmMessage)) return;
+
+      if (persisted) {
+        const destroyField = block.querySelector(':scope > input[name*="[_destroy]"]');
+        if (destroyField) destroyField.value = '1';
+        block.style.display = 'none';
+      } else {
+        block.remove();
+      }
+    }
+  })();
+</script>

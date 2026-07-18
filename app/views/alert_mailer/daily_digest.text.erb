@@ -1,0 +1,15 @@
+<%= @user.name %> 様
+
+以下の対象者について、確認をお願いします。
+
+<% @rows.each do |row| %>
+■<%= row.care_recipient.name %>
+<% row.messages.each do |message| %>
+・<%= message %>
+<% end %>
+
+<% end %>
+ダッシュボード: <%= dashboard_url %>
+
+---
+このメールは毎日自動で送信されます。受け取りたくない場合は、ユーザー編集画面から通知をオフにできます。

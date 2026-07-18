@@ -67,9 +67,21 @@
   <% end %>
 </div>
 
+<div class="care-plans-entry panel">
+  <h3>居宅サービス計画書</h3>
+  <% latest_care_plan = @care_recipient.care_plans.first %>
+  <% if latest_care_plan %>
+    <p>最新の計画書: <%= latest_care_plan.created_on %>作成(<%= latest_care_plan.created_by.name %>)</p>
+  <% else %>
+    <p class="text-unset">まだ計画書が作成されていません</p>
+  <% end %>
+  <p>第1〜3表をアプリ内で作成・編集し、印刷・PDF保存できます(第3表は定期予定から自動作成)。</p>
+  <p><%= link_to "計画書を見る・作成する", care_recipient_care_plans_path(@care_recipient), class: "btn btn-show" %></p>
+</div>
+
 <div class="care-documents panel">
   <h3>書類</h3>
-  <p>リハビリ実施計画書・居宅サービス計画書・通所介護計画書など、事業所外で作成された公式書類を保管します。</p>
+  <p>リハビリ実施計画書・通所介護計画書など、事業所外で作成された公式書類を保管します。</p>
   <p><%= link_to "書類一覧を見る", care_recipient_care_documents_path(@care_recipient), class: "btn btn-show" %></p>
 </div>
 

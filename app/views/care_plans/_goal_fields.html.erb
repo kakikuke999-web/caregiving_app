@@ -1,0 +1,54 @@
+<div class="cp-goal panel" data-persisted="<%= f.object.persisted? %>">
+  <%= f.hidden_field :id %>
+  <%= f.hidden_field :_destroy %>
+
+  <div class="cp-goal-header">
+    <h4 class="cp-goal-title">課題(ニーズ)</h4>
+    <button type="button" class="btn btn-delete cp-remove-goal-btn">この課題を削除</button>
+  </div>
+
+  <div class="field">
+    <%= f.label :issue, "生活全般の解決すべき課題(ニーズ)" %>
+    <%= f.text_area :issue, rows: 2, class: "form-control", placeholder: "例: 一人で入浴することに不安があり、安全に入浴したい" %>
+  </div>
+
+  <div class="field-row">
+    <div class="field-col" style="flex: 3 1 260px;">
+      <%= f.label :long_term_goal, "長期目標" %>
+      <%= f.text_area :long_term_goal, rows: 2, class: "form-control" %>
+    </div>
+    <div class="field-col" style="max-width: 140px;">
+      <%= f.label :long_term_goal_period, "期間" %>
+      <%= f.text_field :long_term_goal_period, class: "form-control", placeholder: "例: 6ヶ月" %>
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field-col" style="flex: 3 1 260px;">
+      <%= f.label :short_term_goal, "短期目標" %>
+      <%= f.text_area :short_term_goal, rows: 2, class: "form-control" %>
+    </div>
+    <div class="field-col" style="max-width: 140px;">
+      <%= f.label :short_term_goal_period, "期間" %>
+      <%= f.text_field :short_term_goal_period, class: "form-control", placeholder: "例: 3ヶ月" %>
+    </div>
+  </div>
+
+  <div class="cp-services-block">
+    <h5>サービス内容</h5>
+
+    <div class="cp-services-list" data-services-list>
+      <%= f.fields_for :care_plan_services do |service_form| %>
+        <%= render "service_fields", f: service_form %>
+      <% end %>
+    </div>
+
+    <template class="cp-service-template">
+      <%= f.fields_for :care_plan_services, CarePlanService.new, child_index: "NEW_SERVICE_RECORD" do |service_form| %>
+        <%= render "service_fields", f: service_form %>
+      <% end %>
+    </template>
+
+    <button type="button" class="btn btn-secondary cp-add-service-btn">＋ サービスを追加</button>
+  </div>
+</div>

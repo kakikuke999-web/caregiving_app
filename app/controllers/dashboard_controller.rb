@@ -1,6 +1,4 @@
 class DashboardController < ApplicationController
-  STALE_THRESHOLD = 7.days
-
   def index
     authorize :dashboard, :index?, policy_class: DashboardPolicy
 
@@ -25,12 +23,6 @@ class DashboardController < ApplicationController
   private
 
   def build_row(care_recipient)
-    last_recorded_at = [
-      care_recipient.vitals.maximum(:recorded_at),
-      care_recipient.adl_records.maximum(:recorded_at),
-      care_recipient.medication_records.maximum(:recorded_at)
-    ].compact.max
-
     next_visit = care_recipient.visit_reports
                                 .where(status: :planned)
                                 .where("visited_at >= ?", Time.current)
@@ -39,10 +31,10 @@ class DashboardController < ApplicationController
 
     {
       care_recipient: care_recipient,
-      last_recorded_at: last_recorded_at,
-      stale: last_recorded_at.nil? || last_recorded_at < STALE_THRESHOLD.ago,
+      last_recorded_at: care_recipient.last_recorded_at,
+      stale: care_recipient.stale?,
       next_visit: next_visit,
-      missed_count: care_recipient.visit_reports.where(status: :missed).count,
+      missed_count: care_recipient.missed_visit_count,
       certification_expired: care_recipient.certification_expired?,
       certification_expiring: care_recipient.certification_expiring?,
       monitored_this_month: care_recipient.monitored_this_month?

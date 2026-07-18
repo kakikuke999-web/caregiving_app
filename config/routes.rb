@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   post "show_menu", to: "home#show_menu"
 
   get "dashboard", to: "dashboard#index"
+  post "alert_notifications/trigger", to: "alert_notifications#trigger"
+  post "alert_notifications/send_test", to: "alert_notifications#send_test"
   get "calendar", to: "calendar#index"
   get "calendar_events", to: "visit_reports#calendar_events_all"
   get "personal_schedule_events", to: "personal_schedules#calendar_events_all"
@@ -32,6 +34,7 @@ Rails.application.routes.draw do
     resources :care_documents, except: [:show]
     resources :support_logs, except: [:show]
     resource :service_usage_slip, only: [:show]
+    resources :care_plans
     resources :recurring_schedules, except: [:show] do
       post :generate, on: :collection
     end

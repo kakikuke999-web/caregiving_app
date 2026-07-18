@@ -1,0 +1,146 @@
+<% abbr_day_names = %w[日 月 火 水 木 金 土] %>
+
+<p class="no-print">
+  <%= link_to "計画書の履歴に戻る", care_recipient_care_plans_path(@care_recipient) %>
+  <% if policy(@care_plan).update? %>
+    <%= link_to "編集", edit_care_recipient_care_plan_path(@care_recipient, @care_plan), class: "btn btn-edit" %>
+  <% end %>
+  <button type="button" class="btn btn-show" onclick="window.print()">印刷 / PDFとして保存</button>
+</p>
+
+<div class="panel care-plan-doc">
+  <h2>
+    居宅サービス計画書(1)
+    <% if @care_plan.latest? %><span class="status-badge good care-plan-version-badge">最新</span><% end %>
+  </h2>
+
+  <table class="cp-table">
+    <tr>
+      <th>利用者名</th>
+      <td><%= @care_recipient.name %><% if @care_recipient.name_kana.present? %>(<%= @care_recipient.name_kana %>)<% end %></td>
+      <th>生年月日</th>
+      <td><%= @care_recipient.birthday %></td>
+    </tr>
+    <tr>
+      <th>要介護状態区分</th>
+      <td><%= @care_recipient.care_level %></td>
+      <th>認定の有効期間(〜)</th>
+      <td><%= @care_recipient.care_level_valid_until %></td>
+    </tr>
+    <tr>
+      <th>居宅サービス計画作成日</th>
+      <td><%= @care_plan.created_on %></td>
+      <th>作成者</th>
+      <td><%= @care_plan.created_by.name %></td>
+    </tr>
+    <tr>
+      <th>居宅介護支援事業者・事業所名</th>
+      <td colspan="3"><%= @care_plan.office_name %></td>
+    </tr>
+    <tr>
+      <th>利用者及び家族の生活に対する意向</th>
+      <td colspan="3" style="white-space: pre-wrap;"><%= @care_plan.family_intention %></td>
+    </tr>
+    <tr>
+      <th>介護認定審査会の意見及びサービスの種類の指定</th>
+      <td colspan="3" style="white-space: pre-wrap;"><%= @care_plan.certification_committee_opinion %></td>
+    </tr>
+    <tr>
+      <th>総合的な援助の方針</th>
+      <td colspan="3" style="white-space: pre-wrap;"><%= @care_plan.policy_summary %></td>
+    </tr>
+    <% if @care_plan.assistance_reason.present? %>
+      <tr>
+        <th>生活援助中心型の算定理由</th>
+        <td colspan="3"><%= @care_plan.assistance_reason %></td>
+      </tr>
+    <% end %>
+  </table>
+
+  <h2>居宅サービス計画書(2)</h2>
+
+  <% if @care_plan.care_plan_goals.empty? %>
+    <p class="text-unset">課題(ニーズ)が登録されていません。</p>
+  <% else %>
+    <% @care_plan.care_plan_goals.each_with_index do |goal, index| %>
+      <div class="cp-goal-doc">
+        <table class="cp-table">
+          <tr>
+            <th rowspan="3" style="width: 1%;">課題<%= index + 1 %></th>
+            <th>生活全般の解決すべき課題(ニーズ)</th>
+            <td colspan="3" style="white-space: pre-wrap;"><%= goal.issue %></td>
+          </tr>
+          <tr>
+            <th>長期目標</th>
+            <td style="white-space: pre-wrap;"><%= goal.long_term_goal %></td>
+            <th>期間</th>
+            <td><%= goal.long_term_goal_period %></td>
+          </tr>
+          <tr>
+            <th>短期目標</th>
+            <td style="white-space: pre-wrap;"><%= goal.short_term_goal %></td>
+            <th>期間</th>
+            <td><%= goal.short_term_goal_period %></td>
+          </tr>
+        </table>
+
+        <% if goal.care_plan_services.any? %>
+          <table class="cp-table">
+            <thead>
+              <tr>
+                <th>サービス内容</th>
+                <th>サービス種別</th>
+                <th>提供事業者</th>
+                <th>頻度</th>
+                <th>期間</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% goal.care_plan_services.each do |service| %>
+                <tr>
+                  <td><%= service.content %></td>
+                  <td><%= service.category %></td>
+                  <td><%= service.provider %></td>
+                  <td><%= service.frequency %></td>
+                  <td><%= service.period %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <h2>週間サービス計画表(3)</h2>
+  <p class="text-unset">「定期予定」の登録内容から自動的に作成しています。変更する場合は定期予定の管理画面から編集してください。</p>
+
+  <% if @weekly_rows.empty? %>
+    <p class="text-unset">登録された定期予定がありません。</p>
+  <% else %>
+    <div class="table-responsive">
+      <table class="cp-table">
+        <thead>
+          <tr>
+            <% abbr_day_names.each do |day| %><th><%= day %></th><% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <% (0..6).each do |day_of_week| %>
+              <td>
+                <% @weekly_rows.select { |r| r[:day_of_week] == day_of_week }.each do |row| %>
+                  <p style="margin: 0 0 8px;">
+                    <strong><%= row[:time_range] %></strong><br>
+                    <%= row[:visit_type_name] %><br>
+                    <span class="text-unset"><%= row[:assignee] %></span>
+                  </p>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

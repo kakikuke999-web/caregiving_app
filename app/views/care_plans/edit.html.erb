@@ -1,0 +1,5 @@
+<h2><%= @care_recipient.name %>さんの居宅サービス計画書 - 編集</h2>
+
+<%= render "form", care_recipient: @care_recipient, care_plan: @care_plan %>
+
+<p><%= link_to "計画書の履歴に戻る", care_recipient_care_plans_path(@care_recipient) %></p>

@@ -945,6 +945,7 @@ p.alert.flash {
 
 @media print {
   .app-header,
+  .flash,
   .no-print {
     display: none !important;
   }
@@ -957,4 +958,103 @@ p.alert.flash {
     max-width: none;
     padding: 0;
   }
+}
+
+/* ==========================================================================
+   居宅サービス計画書（第1〜3表）
+   ========================================================================== */
+
+.cp-goals-section {
+  margin: 24px 0;
+}
+
+.cp-goals-header {
+  margin-bottom: 12px;
+}
+
+.cp-goal {
+  margin-bottom: 16px;
+  border-left: 4px solid var(--color-primary);
+}
+
+.cp-goal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cp-goal-title {
+  margin: 0;
+}
+
+.cp-services-block {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border);
+}
+
+.cp-services-block h5 {
+  font-size: 13px;
+  color: var(--ink-secondary);
+  margin: 0 0 10px;
+}
+
+.cp-services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.cp-service-row {
+  background: var(--surface-alt);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+
+.cp-remove-col {
+  display: flex;
+  align-items: flex-end;
+}
+
+.cp-remove-col .btn {
+  width: 100%;
+}
+
+/* ---- 居宅サービス計画書 表示・印刷画面 ---- */
+
+.care-plan-doc table.cp-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+.care-plan-doc table.cp-table th,
+.care-plan-doc table.cp-table td {
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.care-plan-doc table.cp-table th {
+  background: var(--surface-alt);
+  color: var(--ink-secondary);
+  white-space: nowrap;
+  width: 1%;
+}
+
+.care-plan-doc .cp-goal-doc {
+  margin-bottom: 18px;
+}
+
+.care-plan-doc .cp-goal-doc:last-child {
+  margin-bottom: 0;
+}
+
+.care-plan-version-badge {
+  margin-left: 8px;
 }

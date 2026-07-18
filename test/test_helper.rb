@@ -11,6 +11,7 @@ module ActiveSupport
     fixtures :all
 
     include Devise::Test::IntegrationHelpers
+    include ActionMailer::TestHelper
 
     # Add more helper methods to be used by all tests here...
   end

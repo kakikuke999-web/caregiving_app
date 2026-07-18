@@ -1,0 +1,30 @@
+<div class="cp-service-row" data-persisted="<%= f.object.persisted? %>">
+  <%= f.hidden_field :id %>
+  <%= f.hidden_field :_destroy %>
+
+  <div class="field-row">
+    <div class="field-col" style="flex: 2 1 220px;">
+      <%= f.label :content, "サービス内容" %>
+      <%= f.text_field :content, class: "form-control", placeholder: "例: 通所介護(食事・入浴介助)" %>
+    </div>
+    <div class="field-col">
+      <%= f.label :category, "サービス種別" %>
+      <%= f.text_field :category, class: "form-control", placeholder: "例: 通所介護" %>
+    </div>
+    <div class="field-col">
+      <%= f.label :provider, "提供事業者" %>
+      <%= f.text_field :provider, class: "form-control" %>
+    </div>
+    <div class="field-col" style="max-width: 120px;">
+      <%= f.label :frequency, "頻度" %>
+      <%= f.text_field :frequency, class: "form-control", placeholder: "週2回" %>
+    </div>
+    <div class="field-col" style="max-width: 140px;">
+      <%= f.label :period, "期間" %>
+      <%= f.text_field :period, class: "form-control", placeholder: "6ヶ月" %>
+    </div>
+    <div class="field-col cp-remove-col" style="max-width: 60px;">
+      <button type="button" class="btn btn-secondary cp-remove-service-btn" aria-label="このサービスを削除">✕</button>
+    </div>
+  </div>
+</div>

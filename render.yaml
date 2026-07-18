@@ -31,6 +31,23 @@ services:
         sync: false
       - key: STORAGE_REGION
         sync: false
+      # メール送信（アラート通知・パスワード再設定など）用のSMTP設定。SMTP_ADDRESSが
+      # 未設定の間はメール配信自体が無効なまま（production.rb参照）。設定するとすぐ有効になる。
+      - key: SMTP_ADDRESS
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER_NAME
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SMTP_DOMAIN
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      # 外部の無料cronサービスから日次アラートメールを起動させるための共有シークレット。
+      - key: ALERT_NOTIFICATION_SECRET
+        generateValue: true
 
 databases:
   - name: caregiving-app-db

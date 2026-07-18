@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  care_plan_goal: one
+  content: MyText
+  category: MyString
+  provider: MyString
+  frequency: MyString
+  period: MyString
+  position: 1
+
+two:
+  care_plan_goal: two
+  content: MyText
+  category: MyString
+  provider: MyString
+  frequency: MyString
+  period: MyString
+  position: 1

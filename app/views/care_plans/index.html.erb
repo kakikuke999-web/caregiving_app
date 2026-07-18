@@ -1,0 +1,47 @@
+<h2><%= @care_recipient.name %>さんの居宅サービス計画書</h2>
+
+<p><%= link_to "対象者ページに戻る", @care_recipient %></p>
+
+<% if policy(CarePlan.new(care_recipient: @care_recipient)).create? %>
+  <p><%= link_to "新しい計画書を作成", new_care_recipient_care_plan_path(@care_recipient), class: "btn btn-primary mb-3" %></p>
+<% end %>
+
+<% if @care_plans.any? %>
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>作成日</th>
+          <th>事業所名</th>
+          <th>作成者</th>
+          <th>課題数</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @care_plans.each do |care_plan| %>
+          <tr>
+            <td>
+              <%= care_plan.created_on %>
+              <% if care_plan.latest? %><span class="status-badge good care-plan-version-badge">最新</span><% end %>
+            </td>
+            <td><%= care_plan.office_name %></td>
+            <td><%= care_plan.created_by.name %></td>
+            <td><%= care_plan.care_plan_goals.size %></td>
+            <td>
+              <%= link_to "表示", care_recipient_care_plan_path(@care_recipient, care_plan), class: "btn btn-show" %>
+              <% if policy(care_plan).update? %>
+                <%= link_to "編集", edit_care_recipient_care_plan_path(@care_recipient, care_plan), class: "btn btn-edit" %>
+              <% end %>
+              <% if policy(care_plan).destroy? %>
+                <%= button_to "削除", care_recipient_care_plan_path(@care_recipient, care_plan), method: :delete, data: { confirm: "この計画書を削除しますか？" }, class: "btn btn-delete" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-unset">まだ計画書が作成されていません</p>
+<% end %>

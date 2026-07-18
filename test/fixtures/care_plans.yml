@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  care_recipient: one
+  created_by: one
+  created_on: <%= 1.year.ago.to_date %>
+  office_name: MyString
+  policy_summary: MyText
+  family_intention: MyText
+  certification_committee_opinion: MyText
+  assistance_reason: MyString
+
+two:
+  care_recipient: two
+  created_by: two
+  created_on: <%= 1.year.ago.to_date %>
+  office_name: MyString
+  policy_summary: MyText
+  family_intention: MyText
+  certification_committee_opinion: MyText
+  assistance_reason: MyString

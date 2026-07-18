@@ -18,10 +18,13 @@ class CareRecipient < ApplicationRecord
     has_many :care_documents, dependent: :destroy
     has_many :recurring_schedules, dependent: :destroy
     has_many :support_logs, dependent: :destroy
+    has_many :care_plans, dependent: :destroy
 
     CARE_LEVELS = %w[自立 要支援1 要支援2 要介護1 要介護2 要介護3 要介護4 要介護5].freeze
 
     CERTIFICATION_WARNING_DAYS = 60
+
+    STALE_THRESHOLD = 7.days
 
     GENDERS = %w[male female].freeze
 
@@ -52,6 +55,22 @@ class CareRecipient < ApplicationRecord
       visit_reports.where(is_monitoring: true, status: :completed)
                    .where(visited_at: Time.zone.now.all_month)
                    .exists?
+    end
+
+    def last_recorded_at
+      [
+        vitals.maximum(:recorded_at),
+        adl_records.maximum(:recorded_at),
+        medication_records.maximum(:recorded_at)
+      ].compact.max
+    end
+
+    def stale?
+      last_recorded_at.nil? || last_recorded_at < STALE_THRESHOLD.ago
+    end
+
+    def missed_visit_count
+      visit_reports.where(status: :missed).count
     end
 
     def age
