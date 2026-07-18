@@ -85,6 +85,17 @@ class CareRecipientsControllerTest < ActionDispatch::IntegrationTest
     assert_equal 16765, @care_recipient.benefit_limit_units
   end
 
+  test "staff sees the index but not edit/delete/new controls" do
+    sign_out users(:one)
+    sign_in users(:staff_one)
+
+    get care_recipients_url
+    assert_response :success
+    assert_select "a", { text: "編集", count: 0 }
+    assert_select "a", { text: "削除", count: 0 }
+    assert_select "a", { text: "新規登録", count: 0 }
+  end
+
   test "should destroy care_recipient" do
     assert_difference("CareRecipient.count", -1) do
       delete care_recipient_url(@care_recipient)

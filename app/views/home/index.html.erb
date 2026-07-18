@@ -1,28 +1,53 @@
 <h1>ようこそ、<%= current_user.name %> さん</h1>
 
 <% if current_user.admin? || current_user.care_manager? %>
-  <p><%= link_to "ケアマネージャー向けダッシュボード", dashboard_path, class: "btn btn-show" %></p>
+  <div class="actions no-print">
+    <%= link_to "ケアマネージャー向けダッシュボード", dashboard_path, class: "btn btn-show" %>
+    <%= link_to "全対象者カレンダー", calendar_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>
+
+<% if current_user.staff? %>
+  <div class="panel">
+    <h2>本日の訪問予定</h2>
+    <% if @today_visits.present? %>
+      <ul class="today-visit-list">
+        <% @today_visits.each do |visit| %>
+          <li>
+            <span class="today-visit-time"><%= l(visit.visited_at, format: :time_only) %></span>
+            <%= link_to visit.care_recipient.name, show_menu_path(care_recipient_id: visit.care_recipient_id) %>
+            <span class="text-unset"><%= visit.visit_type&.name %></span>
+            <% if visit.completed? %><span class="status-badge good">完了</span><% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-unset">本日の訪問予定はありません。</p>
+    <% end %>
+  </div>
 <% end %>
 
 <div class="panel">
   <h2>対象者を選択してください</h2>
 
-  <%= form_with url: show_menu_path, method: :post, local: true do %>
-    <div class="field">
-      <%= label_tag :care_recipient_id, "対象者" %><br>
-      <%= select_tag :care_recipient_id, options_from_collection_for_select(CareRecipient.all, :id, :name), prompt: "選択してください", class: "form-select" %>
-    </div>
-
-    <div class="actions">
-      <%= submit_tag "メニューを表示", class: "btn btn-show" %>
+  <% if @care_recipients.empty? %>
+    <p class="text-unset">対象者が登録されていません。</p>
+  <% else %>
+    <div class="recipient-picker">
+      <% @care_recipients.each do |care_recipient| %>
+        <%= link_to show_menu_path(care_recipient_id: care_recipient.id), class: "recipient-picker-card" do %>
+          <span class="recipient-picker-name"><%= care_recipient.name %></span>
+          <% if care_recipient.care_level.present? %>
+            <span class="recipient-picker-meta"><%= care_recipient.care_level %></span>
+          <% end %>
+        <% end %>
+      <% end %>
     </div>
   <% end %>
 
-  <div class="actions">
-    <%= link_to "対象者を登録", new_care_recipient_path, class: "btn btn-new" %>
-
-    <% if Rails.env.development? %>
-      <%= link_to "ユーザー編集画面へ（開発用）", users_path, class: "btn btn-edit" %>
-    <% end %>
-  </div>
+  <% if policy(CareRecipient).create? %>
+    <div class="actions">
+      <%= link_to "対象者を登録", new_care_recipient_path, class: "btn btn-new" %>
+    </div>
+  <% end %>
 </div>

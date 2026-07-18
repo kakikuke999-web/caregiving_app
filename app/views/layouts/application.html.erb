@@ -57,6 +57,7 @@
             <% if current_user.admin? || current_user.care_manager? %>
               <%= link_to "ダッシュボード", dashboard_path %>
               <%= link_to "全対象者カレンダー", calendar_path %>
+              <%= link_to "ユーザー管理", users_path %>
             <% end %>
           </nav>
 

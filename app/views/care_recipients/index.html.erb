@@ -24,11 +24,17 @@
 
       <div class="actions">
         <%= link_to "表示", care_recipient, class: "btn btn-show" %>
-        <%= link_to "編集", edit_care_recipient_path(care_recipient), class: "btn btn-edit" %>
-        <%= link_to "削除", care_recipient, method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-delete" %>
+        <% if policy(care_recipient).update? %>
+          <%= link_to "編集", edit_care_recipient_path(care_recipient), class: "btn btn-edit" %>
+        <% end %>
+        <% if policy(care_recipient).destroy? %>
+          <%= link_to "削除", care_recipient, method: :delete, data: { confirm: "本当に削除しますか？" }, class: "btn btn-delete" %>
+        <% end %>
       </div>
     </div>
   <% end %>
 </div>
 
-<%= link_to "新規登録", new_care_recipient_path, class: "btn btn-new" %>
+<% if policy(CareRecipient).create? %>
+  <%= link_to "新規登録", new_care_recipient_path, class: "btn btn-new" %>
+<% end %>

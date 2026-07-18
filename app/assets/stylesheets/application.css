@@ -1058,3 +1058,113 @@ p.alert.flash {
 .care-plan-version-badge {
   margin-left: 8px;
 }
+
+/* ==========================================================================
+   ホーム画面（ロール別の対象者選択・本日の訪問予定）
+   ========================================================================== */
+
+.recipient-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.recipient-picker-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  text-decoration: none;
+  transition: box-shadow 0.15s ease, transform 0.15s ease, background 0.15s ease;
+}
+
+.recipient-picker-card:hover {
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-2px);
+}
+
+.recipient-picker-name {
+  font-weight: 700;
+  color: var(--ink-primary);
+  font-size: 15px;
+}
+
+.recipient-picker-meta {
+  font-size: 13px;
+  color: var(--ink-secondary);
+}
+
+.today-visit-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.today-visit-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface-alt);
+  border-radius: var(--radius-sm);
+}
+
+.today-visit-time {
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  min-width: 52px;
+}
+
+/* ==========================================================================
+   モバイル向けカード表示（幅の広い表の代わり）
+   ダッシュボードのように列数が多い表は、スマホ幅では横スクロール表ではなく
+   1件ずつのカードに切り替えて読みやすくする。
+   ========================================================================== */
+
+.mobile-cards {
+  display: none;
+}
+
+.mobile-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.mobile-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.mobile-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+@media (max-width: 700px) {
+  .responsive-table-wrap {
+    display: none;
+  }
+
+  .mobile-cards {
+    display: block;
+  }
+}

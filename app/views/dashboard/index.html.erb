@@ -49,7 +49,8 @@
 <% if @today_visits.present? %>
   <div class="panel">
     <h3>本日の訪問予定</h3>
-    <div class="table-responsive">
+
+    <div class="table-responsive responsive-table-wrap">
       <table>
         <thead>
           <tr>
@@ -80,13 +81,33 @@
         </tbody>
       </table>
     </div>
+
+    <div class="mobile-cards">
+      <% @today_visits.each do |visit| %>
+        <div class="mobile-card">
+          <div class="mobile-card-title">
+            <span class="today-visit-time"><%= l(visit.visited_at, format: :time_only) %></span>
+            <%= link_to visit.care_recipient.name, visit.care_recipient %>
+          </div>
+          <p class="text-unset"><%= visit.visit_type&.name %> ・ <%= visit.assignee_label %></p>
+          <% if policy(visit).update? %>
+            <div class="actions">
+              <%= button_to "完了にする", visit_report_path(visit),
+                    method: :patch,
+                    params: { visit_report: { status: "completed" }, return_to: "dashboard" },
+                    class: "btn btn-show" %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
 <% end %>
 
 <% if @recipient_rows.empty? %>
   <p>対象者が登録されていません。</p>
 <% else %>
-  <div class="table-responsive">
+  <div class="table-responsive responsive-table-wrap">
     <table>
       <thead>
         <tr>
@@ -153,5 +174,46 @@
         <% end %>
       </tbody>
     </table>
+  </div>
+
+  <div class="mobile-cards">
+    <% @recipient_rows.each do |row| %>
+      <% care_recipient = row[:care_recipient] %>
+      <div class="mobile-card">
+        <div class="mobile-card-title">
+          <%= link_to care_recipient.name, care_recipient %>
+          <span class="text-unset"><%= care_recipient.care_level %></span>
+        </div>
+
+        <div class="mobile-card-badges">
+          <% if row[:certification_expired] %>
+            <span class="status-badge critical">認定期限切れ</span>
+          <% elsif row[:certification_expiring] %>
+            <span class="status-badge warning">認定まもなく期限切れ</span>
+          <% end %>
+          <% if row[:stale] %>
+            <span class="status-badge warning">⚠ 記録要確認</span>
+          <% end %>
+          <% if row[:missed_count] > 0 %>
+            <span class="status-badge critical">未実施 ✕<%= row[:missed_count] %>件</span>
+          <% end %>
+          <% if row[:monitored_this_month] %>
+            <span class="status-badge good">モニタリング実施済み</span>
+          <% else %>
+            <span class="status-badge warning">モニタリング未実施</span>
+          <% end %>
+        </div>
+
+        <p class="text-unset">
+          担当: <%= care_recipient.primary_care_manager&.name || "未設定" %><br>
+          次回訪問: <%= row[:next_visit] ? l(row[:next_visit].visited_at, format: :short) : "予定なし" %>
+        </p>
+
+        <div class="actions">
+          <%= link_to "プロフィール", care_recipient, class: "btn btn-show" %>
+          <%= link_to "カレンダー", calendar_care_recipient_path(care_recipient), class: "btn btn-edit" %>
+        </div>
+      </div>
+    <% end %>
   </div>
 <% end %>

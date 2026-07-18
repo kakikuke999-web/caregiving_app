@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   root to: "home#index"  # 仮のトップページ
 
-  post "show_menu", to: "home#show_menu"
+  match "show_menu", to: "home#show_menu", via: [:get, :post]
 
   get "dashboard", to: "dashboard#index"
   post "alert_notifications/trigger", to: "alert_notifications#trigger"
