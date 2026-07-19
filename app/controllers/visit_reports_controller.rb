@@ -101,10 +101,7 @@ class VisitReportsController < ApplicationController
   end
 
   def available_visit_types_for(care_recipient)
-    return VisitType.order(:name) if care_recipient.nil?
-
-    linked = care_recipient.visit_types.order(:name)
-    linked.any? ? linked : VisitType.order(:name)
+    VisitType.available_for(care_recipient)
   end
 
   def event_json(report, include_recipient_name: false)

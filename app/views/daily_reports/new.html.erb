@@ -1,4 +1,4 @@
-<h2><%= @care_recipient.name %> さんの日誌を記録</h2>
+<h2><%= @care_recipient.name %> さんの訪問実績を記録(バイタル・ADL含む)</h2>
 
 <div class="panel">
   <%= form_with model: @form, url: care_recipient_daily_reports_path(@care_recipient), scope: :daily_report_form, method: :post, local: true do |f| %>
@@ -12,9 +12,15 @@
       </div>
     <% end %>
 
-    <div class="mb-3">
-      <%= f.label :visited_on, "来所日" %>
-      <%= f.date_field :visited_on, class: "form-control" %>
+    <div class="field-row">
+      <div class="field-col">
+        <%= f.label :visit_type_id, "訪問タイプ *" %>
+        <%= f.select :visit_type_id, @available_visit_types.map { |vt| [vt.name, vt.id] }, { include_blank: "選択してください" }, class: "form-select" %>
+      </div>
+      <div class="field-col">
+        <%= f.label :visited_at, "来所・訪問日時 *" %>
+        <%= f.datetime_field :visited_at, class: "form-control" %>
+      </div>
     </div>
 
     <h3>本日の様子</h3>

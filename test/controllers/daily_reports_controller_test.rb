@@ -5,14 +5,15 @@ class DailyReportsControllerTest < ActionDispatch::IntegrationTest
     @care_recipient = care_recipients(:one)
   end
 
-  test "staff can register a daily report and it creates a visit report, vitals, and an adl record" do
+  test "staff can register a daily report for any visit type and it creates a visit report, vitals, and an adl record" do
     sign_in users(:staff_one)
 
     assert_difference(["VisitReport.count", "AdlRecord.count"], 1) do
       assert_difference("Vital.count", 3) do
         post care_recipient_daily_reports_url(@care_recipient), params: {
           daily_report_form: {
-            visited_on: "2025-12-26",
+            visit_type_id: visit_types(:day_service).id,
+            visited_at: "2025-12-26T14:30",
             temperature: "36.0",
             systolic: "127",
             diastolic: "75",
@@ -32,9 +33,9 @@ class DailyReportsControllerTest < ActionDispatch::IntegrationTest
     visit_report = VisitReport.last
     assert_equal @care_recipient, visit_report.care_recipient
     assert_equal users(:staff_one), visit_report.user
-    assert_equal "デイサービス", visit_report.visit_type.name
+    assert_equal visit_types(:day_service), visit_report.visit_type
     assert_equal "completed", visit_report.status
-    assert_equal Time.zone.local(2025, 12, 26, 10, 0), visit_report.visited_at
+    assert_equal Time.zone.local(2025, 12, 26, 14, 30), visit_report.visited_at
     assert_redirected_to visit_report_url(visit_report)
 
     adl_record = AdlRecord.last
@@ -51,7 +52,7 @@ class DailyReportsControllerTest < ActionDispatch::IntegrationTest
 
     assert_no_difference("VisitReport.count") do
       post care_recipient_daily_reports_url(@care_recipient), params: {
-        daily_report_form: { visited_on: "2025-12-26", notes: "不正な登録" }
+        daily_report_form: { visit_type_id: visit_types(:day_service).id, visited_at: "2025-12-26T10:00", notes: "不正な登録" }
       }
     end
   end
@@ -61,7 +62,18 @@ class DailyReportsControllerTest < ActionDispatch::IntegrationTest
 
     assert_no_difference("VisitReport.count") do
       post care_recipient_daily_reports_url(@care_recipient), params: {
-        daily_report_form: { visited_on: "2025-12-26", systolic: "127" }
+        daily_report_form: { visit_type_id: visit_types(:day_service).id, visited_at: "2025-12-26T10:00", systolic: "127" }
+      }
+    end
+    assert_response :unprocessable_entity
+  end
+
+  test "rejects a report with no visit type selected" do
+    sign_in users(:staff_one)
+
+    assert_no_difference("VisitReport.count") do
+      post care_recipient_daily_reports_url(@care_recipient), params: {
+        daily_report_form: { visited_at: "2025-12-26T10:00" }
       }
     end
     assert_response :unprocessable_entity

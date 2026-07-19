@@ -3,7 +3,9 @@ class DailyReportsController < ApplicationController
   before_action :authorize_daily_report
 
   def new
-    @form = DailyReportForm.new(visited_on: Date.current)
+    @form = DailyReportForm.new(visited_at: Time.zone.now)
+    @available_visit_types = VisitType.available_for(@care_recipient)
+    @form.visit_type_id = @available_visit_types.first.id if @available_visit_types.count == 1
   end
 
   def create
@@ -14,6 +16,7 @@ class DailyReportsController < ApplicationController
     if @form.save
       redirect_to @form.visit_report, notice: "日誌を登録しました"
     else
+      @available_visit_types = VisitType.available_for(@care_recipient)
       render :new, status: :unprocessable_entity
     end
   end
@@ -30,7 +33,7 @@ class DailyReportsController < ApplicationController
 
   def daily_report_params
     params.require(:daily_report_form).permit(
-      :visited_on, :temperature, :systolic, :diastolic, :pulse,
+      :visit_type_id, :visited_at, :temperature, :systolic, :diastolic, :pulse,
       :bathed, :medication_taken, :urination_count, :bowel_movement,
       :lunch_staple, :lunch_side, :notes
     )

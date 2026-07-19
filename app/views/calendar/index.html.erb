@@ -32,28 +32,75 @@
   document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
 
+    function editEndpointFor(props) {
+      return props.kind === 'personal_schedule'
+        ? `/care_recipients/${props.care_recipient_id}/personal_schedules/${props.id}/edit`
+        : `/visit_reports/${props.id}/edit`;
+    }
+
+    function openEventModal(props) {
+      fetch(editEndpointFor(props), { headers: { 'Accept': 'text/vnd.turbo-stream.html' } })
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('modal-body').innerHTML = html;
+          document.getElementById('eventModalLabel').textContent = '予定詳細';
+          new bootstrap.Modal(document.getElementById('eventModal')).show();
+        });
+    }
+
+    // 月表示は日付セルを点だけにして30日分をスクロールなしで表示しているため、
+    // 日付をタップした時にその日の予定一覧をここで見せる。
+    function openDayList(dateStr, events) {
+      const items = events.map(function (event) {
+        const time = event.allDay ? '' : event.start.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
+        return `<button type="button" class="day-list-item" data-event-id="${event.id}" style="border-left-color: ${event.backgroundColor}">
+                  <span class="day-list-time">${time}</span>
+                  <span class="day-list-title">${event.title}</span>
+                </button>`;
+      }).join('');
+
+      document.getElementById('modal-body').innerHTML = `<div class="day-list">${items}</div>`;
+      document.getElementById('eventModalLabel').textContent = `${dateStr} の予定`;
+
+      document.querySelectorAll('#modal-body .day-list-item').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const ev = calendar.getEventById(btn.dataset.eventId);
+          openEventModal(ev.extendedProps);
+        });
+      });
+
+      new bootstrap.Modal(document.getElementById('eventModal')).show();
+    }
+
+    const isNarrowScreen = window.matchMedia('(max-width: 600px)').matches;
+
     const calendar = new FullCalendar.Calendar(calendarEl, {
-      plugins: [FullCalendar.DayGrid.default],
+      plugins: [FullCalendar.DayGrid.default, FullCalendar.List.default, FullCalendar.Interaction.default],
       initialView: 'dayGridMonth',
       locale: 'ja',
       timeZone: 'UTC',
+      headerToolbar: { left: 'title', center: '', right: 'today prev,next dayGridMonth,listWeek' },
+      buttonText: { today: '今日', dayGridMonth: '月間', listWeek: '週間' },
+      dayMaxEventRows: isNarrowScreen ? false : 3,
       eventSources: ['/calendar_events', '/personal_schedule_events'],
 
-      eventClick: function(info) {
-        const props = info.event.extendedProps;
-        const endpoint = props.kind === 'personal_schedule'
-          ? `/care_recipients/${props.care_recipient_id}/personal_schedules/${props.id}/edit`
-          : `/visit_reports/${props.id}/edit`;
+      eventContent: function (arg) {
+        if (arg.view.type === 'dayGridMonth' && isNarrowScreen) {
+          return { html: `<span class="fc-daygrid-dot" style="background:${arg.event.backgroundColor}"></span>` };
+        }
+        return true;
+      },
 
-        fetch(endpoint, { headers: { 'Accept': 'text/vnd.turbo-stream.html' } })
-          .then(response => response.text())
-          .then(html => {
-            document.getElementById('modal-body').innerHTML = html;
-            const modal = new bootstrap.Modal(document.getElementById('eventModal'));
-            modal.show();
-          });
+      dateClick: function (info) {
+        if (info.view.type !== 'dayGridMonth') return;
+
+        const dayEvents = calendar.getEvents().filter(function (e) { return e.startStr.slice(0, 10) === info.dateStr; });
+        if (dayEvents.length > 0) openDayList(info.dateStr, dayEvents);
+      },
+
+      eventClick: function (info) {
+        openEventModal(info.event.extendedProps);
       }
-
     });
 
     calendar.render();

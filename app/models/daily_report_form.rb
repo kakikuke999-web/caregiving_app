@@ -1,17 +1,17 @@
-# 紙のデイサービス日誌1枚分をまとめて登録するためのフォームオブジェクト。
-# 保存すると訪問記録・バイタル・ADL記録を1件ずつ生成する（DBには専用テーブルを持たない）。
+# 紙の訪問日誌1枚分（バイタル・食事・排泄・入浴・服薬）をまとめて登録するための
+# フォームオブジェクト。保存すると訪問記録・バイタル・ADL記録を1件ずつ生成する
+# （DBには専用テーブルを持たない）。訪問タイプは呼び出し側が選択したものを使う
+# ため、デイサービスに限らずどの訪問タイプでも使える。
 class DailyReportForm
   include ActiveModel::Model
 
-  DAY_SERVICE_VISIT_TYPE_NAME = "デイサービス".freeze
-
-  attr_accessor :care_recipient, :recorded_by, :visited_on, :temperature,
+  attr_accessor :care_recipient, :recorded_by, :visit_type_id, :visited_at, :temperature,
                 :systolic, :diastolic, :pulse, :urination_count,
                 :lunch_staple, :lunch_side, :notes
   attr_reader :bathed, :medication_taken, :bowel_movement
   attr_reader :visit_report
 
-  validates :visited_on, :care_recipient, :recorded_by, presence: true
+  validates :visited_at, :visit_type_id, :care_recipient, :recorded_by, presence: true
   validate :blood_pressure_requires_both_values
 
   def bathed=(value)
@@ -30,12 +30,11 @@ class DailyReportForm
     return false unless valid?
 
     ActiveRecord::Base.transaction do
-      date = visited_on.is_a?(Date) ? visited_on : Date.parse(visited_on.to_s)
-      recorded_at = Time.zone.local(date.year, date.month, date.day, 10)
+      recorded_at = visited_at.is_a?(Time) ? visited_at : Time.zone.parse(visited_at.to_s)
 
       @visit_report = care_recipient.visit_reports.create!(
         user: recorded_by,
-        visit_type: VisitType.find_by(name: DAY_SERVICE_VISIT_TYPE_NAME),
+        visit_type_id: visit_type_id,
         visited_at: recorded_at,
         status: :completed,
         notes: notes

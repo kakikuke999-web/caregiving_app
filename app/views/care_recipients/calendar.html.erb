@@ -23,7 +23,7 @@
         <% end %>
 
         <% if current_user.admin? || current_user.care_manager? || current_user.staff? %>
-          <%= link_to "日誌を記録", new_care_recipient_daily_report_path(@care_recipient), class: "btn btn-show" %>
+          <%= link_to "訪問実績を記録", new_care_recipient_daily_report_path(@care_recipient), class: "btn btn-show" %>
         <% end %>
 
         <% if current_user.admin? %>
@@ -65,20 +65,90 @@
     const canManageVisits = calendarEl.dataset.canManageVisits === 'true';
     const canManageSchedules = calendarEl.dataset.canManageSchedules === 'true';
 
+    function editEndpointFor(props) {
+      if (props.kind === 'personal_schedule') {
+        return `/care_recipients/${careRecipientId}/personal_schedules/${props.id}/edit`;
+      }
+      return canManageVisits ? `/visit_reports/${props.id}/edit` : `/visit_reports/${props.id}`;
+    }
+
+    function openEventModal(props) {
+      fetch(editEndpointFor(props), { headers: { 'Accept': 'text/vnd.turbo-stream.html' } })
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('modal-body').innerHTML = html;
+          document.getElementById('eventModalLabel').textContent = '予定詳細';
+          new bootstrap.Modal(document.getElementById('eventModal')).show();
+        });
+    }
+
+    // 月表示は日付セルを点だけにして30日分をスクロールなしで収めているため、
+    // 日付をタップした時にその日の予定一覧をここで見せる（週表示は各予定が
+    // すでに全文表示されているので使わない）。
+    function openDayList(dateStr, events) {
+      const items = events.map(function (event) {
+        const time = event.allDay ? '' : event.start.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
+        return `<button type="button" class="day-list-item" data-event-id="${event.id}" style="border-left-color: ${event.backgroundColor}">
+                  <span class="day-list-time">${time}</span>
+                  <span class="day-list-title">${event.title}</span>
+                </button>`;
+      }).join('');
+
+      const addLink = canManageVisits
+        ? `<a class="btn btn-show" href="/visit_reports/new?care_recipient_id=${careRecipientId}&visited_at=${dateStr}">＋この日に訪問記録を追加</a>`
+        : (canManageSchedules
+          ? `<a class="btn btn-show" href="/care_recipients/${careRecipientId}/personal_schedules/new?started_at=${dateStr}">＋この日に予定を追加</a>`
+          : '');
+
+      document.getElementById('modal-body').innerHTML = `<div class="day-list">${items}</div><div class="day-list-actions">${addLink}</div>`;
+      document.getElementById('eventModalLabel').textContent = `${dateStr} の予定`;
+
+      document.querySelectorAll('#modal-body .day-list-item').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const ev = calendar.getEventById(btn.dataset.eventId);
+          openEventModal(ev.extendedProps);
+        });
+      });
+
+      new bootstrap.Modal(document.getElementById('eventModal')).show();
+    }
+
+    const isNarrowScreen = window.matchMedia('(max-width: 600px)').matches;
+
     const calendar = new FullCalendar.Calendar(calendarEl, {
-      plugins: [FullCalendar.DayGrid.default, FullCalendar.Interaction.default],
+      plugins: [FullCalendar.DayGrid.default, FullCalendar.List.default, FullCalendar.Interaction.default],
       initialView: 'dayGridMonth',
       locale: 'ja',
       // config.time_zone is unset (=UTC) app-wide, so every stored/displayed timestamp is a literal
       // wall-clock value already. FullCalendar's default timeZone:'local' would re-convert using the
       // browser's zone (JST), shifting times by +9h and sometimes pushing long visits into the next day.
       timeZone: 'UTC',
+      headerToolbar: { left: 'title', center: '', right: 'today prev,next dayGridMonth,listWeek' },
+      buttonText: { today: '今日', dayGridMonth: '月間', listWeek: '週間' },
+      dayMaxEventRows: isNarrowScreen ? false : 3,
       eventSources: [
         `/care_recipients/${careRecipientId}/visit_events`,
         `/care_recipients/${careRecipientId}/personal_schedule_events`
       ],
 
+      // スマホの月表示だけ、予定を色付きの点に簡略化して30日分を縦スクロールなしで表示する。
+      // 週表示・デスクトップの月表示は通常どおり時刻＋内容を表示する。
+      eventContent: function (arg) {
+        if (arg.view.type === 'dayGridMonth' && isNarrowScreen) {
+          return { html: `<span class="fc-daygrid-dot" style="background:${arg.event.backgroundColor}"></span>` };
+        }
+        return true;
+      },
+
       dateClick: function (info) {
+        if (info.view.type !== 'dayGridMonth') return;
+
+        const dayEvents = calendar.getEvents().filter(function (e) { return e.startStr.slice(0, 10) === info.dateStr; });
+        if (dayEvents.length > 0) {
+          openDayList(info.dateStr, dayEvents);
+          return;
+        }
+
         if (canManageVisits) {
           window.location.href = `/visit_reports/new?care_recipient_id=${careRecipientId}&visited_at=${info.dateStr}`;
         } else if (canManageSchedules) {
@@ -86,24 +156,9 @@
         }
       },
 
-      eventClick: function(info) {
-        const props = info.event.extendedProps;
-        let endpoint;
-        if (props.kind === 'personal_schedule') {
-          endpoint = `/care_recipients/${careRecipientId}/personal_schedules/${props.id}/edit`;
-        } else {
-          endpoint = canManageVisits ? `/visit_reports/${props.id}/edit` : `/visit_reports/${props.id}`;
-        }
-
-        fetch(endpoint, { headers: { 'Accept': 'text/vnd.turbo-stream.html' } })
-          .then(response => response.text())
-          .then(html => {
-            document.getElementById('modal-body').innerHTML = html;
-            const modal = new bootstrap.Modal(document.getElementById('eventModal'));
-            modal.show();
-          });
+      eventClick: function (info) {
+        openEventModal(info.event.extendedProps);
       }
-
     });
 
     calendar.render();

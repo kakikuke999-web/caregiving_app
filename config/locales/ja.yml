@@ -139,6 +139,7 @@ ja:
   activemodel:
     attributes:
       daily_report_form:
-        visited_on: "来所日"
+        visited_at: "来所・訪問日時"
+        visit_type_id: "訪問タイプ"
         care_recipient: "対象者"
         recorded_by: "記録者"
