@@ -3,3 +3,5 @@
 <div class="panel">
   <%= render partial: 'form', locals: { report: @report, available_visit_types: @available_visit_types } %>
 </div>
+
+<%= render partial: "visit_reports/recorded_vitals", locals: { report: @report } %>

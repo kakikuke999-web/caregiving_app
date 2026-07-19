@@ -1,6 +1,7 @@
 <h2>訪問記録の詳細</h2>
 
 <%= render partial: "visit_reports/details", locals: { report: @visit_report } %>
+<%= render partial: "visit_reports/recorded_vitals", locals: { report: @visit_report } %>
 
 <div>
   <% if policy(@visit_report).update? %>

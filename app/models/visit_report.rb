@@ -28,6 +28,20 @@ class VisitReport < ApplicationRecord
     user&.name || provider_name.presence || "未定"
   end
 
+  # バイタル・ADL記録はVisitReportに直接のFKを持たず、同じ対象者・同じ日時
+  # （DailyReportFormが両方に同じrecorded_at/visited_atを書き込む）で紐づく。
+  def matching_vitals
+    return Vital.none if visited_at.blank?
+
+    care_recipient.vitals.where(recorded_at: visited_at)
+  end
+
+  def matching_adl_record
+    return nil if visited_at.blank?
+
+    care_recipient.adl_records.find_by(recorded_at: visited_at)
+  end
+
   private
 
   def ended_at_after_visited_at

@@ -16,6 +16,27 @@ class VisitReportsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "show displays vitals and ADL data recorded at the same time as the visit" do
+    Vital.create!(care_recipient: @visit_report.care_recipient, recorded_by: users(:one),
+                  type: "blood_pressure", systolic: 128, diastolic: 76, recorded_at: @visit_report.visited_at)
+    AdlRecord.create!(care_recipient: @visit_report.care_recipient, recorded_by: users(:one),
+                       recorded_at: @visit_report.visited_at, bathed: true, bowel_movement: false)
+
+    get visit_report_url(@visit_report)
+    assert_select ".recorded-vitals-panel"
+    assert_match "128/76", response.body
+  end
+
+  test "the calendar modal (turbo_stream) also shows recorded vitals, not just the plain HTML page" do
+    Vital.create!(care_recipient: @visit_report.care_recipient, recorded_by: users(:one),
+                  type: "pulse", value: 82, recorded_at: @visit_report.visited_at)
+
+    get visit_report_url(@visit_report), headers: { "Accept" => "text/vnd.turbo-stream.html" }
+    assert_response :success
+    assert_match "脈拍", response.body
+    assert_match "82", response.body
+  end
+
   test "should get new" do
     get new_visit_report_url, params: { care_recipient_id: @visit_report.care_recipient_id }
     assert_response :success
@@ -45,6 +66,16 @@ class VisitReportsControllerTest < ActionDispatch::IntegrationTest
   test "should get edit" do
     get edit_visit_report_url(@visit_report)
     assert_response :success
+  end
+
+  test "edit's calendar modal (turbo_stream) shows recorded vitals alongside the edit form" do
+    Vital.create!(care_recipient: @visit_report.care_recipient, recorded_by: users(:one),
+                  type: "temperature", value: 36.8, recorded_at: @visit_report.visited_at)
+
+    get edit_visit_report_url(@visit_report), headers: { "Accept" => "text/vnd.turbo-stream.html" }
+    assert_response :success
+    assert_match "体温", response.body
+    assert_match "36.8", response.body
   end
 
   test "should create visit_report with the care_recipient carried through from the form" do

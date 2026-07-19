@@ -1,0 +1,39 @@
+<% vitals = report.matching_vitals %>
+<% adl = report.matching_adl_record %>
+<% if vitals.any? || adl %>
+  <div class="panel recorded-vitals-panel">
+    <h3>この訪問時に記録されたバイタル・ADL</h3>
+
+    <% if vitals.any? %>
+      <ul>
+        <% vitals.each do |vital| %>
+          <li>
+            <% if vital.type == "blood_pressure" %>
+              <strong>血圧:</strong> <%= vital.systolic %>/<%= vital.diastolic %>
+            <% else %>
+              <strong><%= vital.label %>:</strong> <%= vital.value %><%= vital.unit %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <% if adl %>
+      <ul>
+        <% if adl.lunch_staple.present? || adl.lunch_side.present? %>
+          <li><strong>食事摂取量(昼食):</strong> 主食 <%= adl.lunch_staple %> / 副食 <%= adl.lunch_side %>(10段階)</li>
+        <% end %>
+        <li><strong>入浴:</strong> <%= adl.bathed_label %></li>
+        <li><strong>服薬:</strong> <%= adl.medication_taken_label %></li>
+        <li><strong>排尿:</strong> <%= adl.urination_count.nil? ? "-" : "#{adl.urination_count}回" %></li>
+        <li><strong>排便:</strong> <%= adl.bowel_movement_label %></li>
+      </ul>
+    <% end %>
+
+    <p class="text-unset">
+      <%= link_to "バイタル一覧を見る", care_recipient_vitals_path(report.care_recipient) %>
+      ・
+      <%= link_to "ADL記録一覧を見る", care_recipient_adl_records_path(report.care_recipient) %>
+    </p>
+  </div>
+<% end %>

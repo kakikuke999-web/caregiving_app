@@ -1,3 +1,4 @@
 <%= render partial: "details", locals: { report: @visit_report }, formats: [:html] %>
+<%= render partial: "recorded_vitals", locals: { report: @visit_report }, formats: [:html] %>
 
 <p><%= link_to "連絡帳（コメント）を見る・書く", visit_report_path(@visit_report), class: "btn btn-show" %></p>
