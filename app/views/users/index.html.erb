@@ -1,5 +1,9 @@
 <h2>ユーザー一覧</h2>
 
+<% if policy(User).create? %>
+  <p><%= link_to "新規ユーザー作成", new_user_path, class: "btn btn-new" %></p>
+<% end %>
+
 <div class="table-responsive">
   <table>
     <thead>

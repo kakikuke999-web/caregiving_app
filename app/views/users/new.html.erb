@@ -1,0 +1,44 @@
+<h2>ユーザー新規作成</h2>
+
+<div class="panel">
+  <%= form_with model: @user, url: create_user_path, local: true do |f| %>
+    <% if @user.errors.any? %>
+      <div class="alert alert-danger">
+        <ul>
+          <% @user.errors.each do |error| %>
+            <li><%= error.full_message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :name, "名前" %><br>
+      <%= f.text_field :name %>
+    </div>
+
+    <div class="field">
+      <%= f.label :email %><br>
+      <%= f.email_field :email %>
+    </div>
+
+    <div class="field">
+      <%= f.label :role %><br>
+      <%= f.select :role, policy(@user).assignable_roles.map { |r| [User::ROLE_LABELS[r], r] }, { include_blank: "選択してください" }, class: "form-select" %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password, "パスワード" %><br>
+      <%= f.password_field :password %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password_confirmation, "パスワード（確認）" %><br>
+      <%= f.password_field :password_confirmation %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "作成する", class: "btn btn-new" %>
+    </div>
+  <% end %>
+</div>

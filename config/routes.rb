@@ -44,5 +44,8 @@ Rails.application.routes.draw do
     resources :comments, only: [:create, :destroy]
   end
   resources :visit_types, except: [:show]
-  resources :users, only: [:index, :edit, :update]
+  # devise_for :users already claims POST /users for self-registration, so the
+  # admin-facing "create a user" action lives at a distinct path to avoid clashing.
+  resources :users, only: [:index, :new, :edit, :update]
+  post "users/new", to: "users#create", as: :create_user
 end
